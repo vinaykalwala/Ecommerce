@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Checkout</h2>
+
+<h3>Select Address</h3>
+
+<form method="post"
+      action="{% url 'place_order' %}">
+
+    {% csrf_token %}
+
+    {% for address in addresses %}
+
+        <input
+            type="radio"
+            name="address"
+            value="{{ address.id }}"
+            required
+        >
+
+        {{ address.full_name }}
+        -
+        {{ address.city }}
+
+        <br>
+
+    {% endfor %}
+
+    <hr>
+
+    <h3>
+        Subtotal:
+        ₹{{ cart.subtotal }}
+    </h3>
+
+    <h3>
+        Discount:
+        ₹{{ cart.discount_amount }}
+    </h3>
+
+    <h2>
+        Total:
+        ₹{{ cart.total }}
+    </h2>
+
+    <button type="submit">
+        Place Order
+    </button>
+
+</form>
+
+{% endblock %}

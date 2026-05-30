@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Shopping Cart</h2>
+
+{% if items %}
+
+<table border="1">
+
+<tr>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Qty</th>
+    <th>Total</th>
+    <th>Action</th>
+</tr>
+
+{% for item in items %}
+
+<tr>
+
+<td>
+    {{ item.variant.product.name }}
+</td>
+
+<td>
+
+{% if item.variant.sale_price %}
+    {{ item.variant.sale_price }}
+{% else %}
+    {{ item.variant.price }}
+{% endif %}
+
+</td>
+
+<td>
+
+<a href="{% url 'decrease_quantity' item.id %}">
+    -
+</a>
+
+{{ item.quantity }}
+
+<a href="{% url 'increase_quantity' item.id %}">
+    +
+</a>
+
+</td>
+
+<td>
+
+{% if item.variant.sale_price %}
+    {{ item.variant.sale_price|floatformat:2 }}
+{% else %}
+    {{ item.variant.price|floatformat:2 }}
+{% endif %}
+
+</td>
+
+<td>
+
+<a href="{% url 'remove_cart_item' item.id %}">
+    Remove
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<hr>
+<h3>Apply Coupon</h3>
+
+<form method="post"
+      action="{% url 'apply_coupon' %}">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="coupon_code"
+        placeholder="Coupon Code"
+    >
+
+    <button type="submit">
+        Apply
+    </button>
+
+</form>
+
+<h3>
+Subtotal : ₹{{ subtotal }}
+</h3>
+
+<a href="#">
+    Proceed To Checkout
+</a>
+
+{% else %}
+
+<p>Your cart is empty.</p>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>My Addresses</h2>
+
+<a href="{% url 'add_address' %}">
+    Add Address
+</a>
+
+<hr>
+
+{% for address in addresses %}
+
+<p>
+{{ address.full_name }}
+</p>
+
+<p>
+{{ address.address_line_1 }}
+</p>
+
+<p>
+{{ address.city }}
+</p>
+
+{% if address.is_default %}
+    <strong>Default</strong>
+{% endif %}
+
+<a href="{% url 'edit_address' address.id %}">
+    Edit
+</a>
+
+<a href="{% url 'delete_address' address.id %}">
+    Delete
+</a>
+
+<a href="{% url 'set_default_address' address.id %}">
+    Make Default
+</a>
+
+<hr>
+
+{% endfor %}
+
+{% endblock %}

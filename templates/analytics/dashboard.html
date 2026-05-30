@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>
+Analytics Dashboard
+</h2>
+
+<hr>
+
+<h3>
+Revenue:
+₹{{ total_revenue }}
+</h3>
+
+<h3>
+Orders:
+{{ total_orders }}
+</h3>
+
+<h3>
+Delivered:
+{{ delivered_orders }}
+</h3>
+
+<h3>
+Cancelled:
+{{ cancelled_orders }}
+</h3>
+
+<hr>
+
+<h3>
+Top Products
+</h3>
+
+{% for item in top_products %}
+
+<p>
+
+{{ item.product_name }}
+
+-
+{{ item.sold }}
+
+Sold
+
+</p>
+
+{% endfor %}
+
+<hr>
+
+<h3>
+Popular Searches
+</h3>
+
+{% for item in popular_searches %}
+
+<p>
+
+{{ item.query }}
+
+({{ item.total }})
+
+</p>
+
+{% endfor %}
+
+{% endblock %}
