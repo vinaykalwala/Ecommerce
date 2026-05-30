@@ -12,10 +12,7 @@ urlpatterns = [
     path("catalog/",include("catalog.urls")),
     path("cart/",include("cart.urls")),
     path("wishlist/",include("wishlist.urls")),
-    path(
-    "coupons/",
-    include("coupons.urls")
-),
+    path("coupons/",include("coupons.urls")),
 
 ]
 if settings.DEBUG:

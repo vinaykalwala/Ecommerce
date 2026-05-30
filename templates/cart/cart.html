@@ -91,10 +91,37 @@
     </button>
 
 </form>
+{% if cart.coupon %}
+
+<p>
+
+Coupon:
+<strong>
+{{ cart.coupon.code }}
+</strong>
+
+</p>
+
+<a href="{% url 'remove_coupon' %}">
+    Remove Coupon
+</a>
+
+{% endif %}
 
 <h3>
-Subtotal : ₹{{ subtotal }}
+Subtotal:
+₹{{ cart.subtotal }}
 </h3>
+
+<h3>
+Discount:
+₹{{ cart.discount_amount }}
+</h3>
+
+<h2>
+Total:
+₹{{ cart.total }}
+</h2>
 
 <a href="#">
     Proceed To Checkout

@@ -117,10 +117,7 @@ def increase_quantity_view(request,item_id):
 
     return redirect("cart_detail")
 
-def decrease_quantity_view(
-    request,
-    item_id
-):
+def decrease_quantity_view(request,item_id):
 
     item = get_object_or_404(
         CartItem,
