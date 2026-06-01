@@ -1,17 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 
-from .models import (
-    Category,
-    Product
-)
+from .models import *
 
-from analytics.models import (
-    ProductView,
-    SearchLog,
-    CategoryView,
-    VisitorLog
-)
+from analytics.models import *
 
 
 def home_view(request):

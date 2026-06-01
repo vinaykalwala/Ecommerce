@@ -115,3 +115,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 RAZORPAY_KEY_ID = "your_key_id"
 RAZORPAY_KEY_SECRET = "your_secret"
 
+AUTH_USER_MODEL = 'accounts.User'

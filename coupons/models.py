@@ -3,6 +3,8 @@
 from django.db import models
 
 from core.models import BaseModel
+from accounts.models import *
+from orders.models import *
 
 
 class Coupon(BaseModel):

@@ -1,3 +1,6 @@
+from core.models import *
+from catalog.models import *
+
 class InventoryLog(BaseModel):
 
     ACTIONS = (
