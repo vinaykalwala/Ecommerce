@@ -263,85 +263,139 @@ def verify_otp_view(request, otp_type):
     })
 
 def login_view(request):
+    # If already logged in
     if request.user.is_authenticated:
-        return redirect('profile')
-    
+        if request.user.user_type == 'customer':
+            return redirect('home')
+        else:
+            return redirect('dashboard')
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        
+
         captcha_input = request.POST.get('captcha', '').upper()
         captcha_session = request.session.get('captcha_text', '')
-        
+
         if captcha_input != captcha_session:
             messages.error(request, 'Invalid captcha!')
-            form = LoginForm()
+
         elif form.is_valid():
             login_input = form.cleaned_data['login_input']
             password = form.cleaned_data['password']
-            
+
             user = None
-            
-            # Try to find user by email (since email is USERNAME_FIELD)
+
+            # Login with Email
             try:
                 user_obj = User.objects.get(email=login_input)
-                user = authenticate(request, username=user_obj.email, password=password)
+                user = authenticate(
+                    request,
+                    username=user_obj.email,
+                    password=password
+                )
             except User.DoesNotExist:
                 pass
-            
-            # If not found by email, try by username
+
+            # Login with Username
             if not user:
                 try:
                     user_obj = User.objects.get(username=login_input)
-                    user = authenticate(request, username=user_obj.email, password=password)
+                    user = authenticate(
+                        request,
+                        username=user_obj.email,
+                        password=password
+                    )
                 except User.DoesNotExist:
                     pass
-            
-            # If not found by username, try by mobile number
+
+            # Login with Mobile Number
             if not user and login_input.isdigit():
                 try:
-                    user_obj = User.objects.get(mobile_number=login_input)
-                    user = authenticate(request, username=user_obj.email, password=password)
+                    user_obj = User.objects.get(
+                        mobile_number=login_input
+                    )
+                    user = authenticate(
+                        request,
+                        username=user_obj.email,
+                        password=password
+                    )
                 except User.DoesNotExist:
                     pass
-            
-            # Get IP address
+
+            # Get IP Address
             x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
             if x_forwarded_for:
                 ip_address = x_forwarded_for.split(',')[0]
             else:
                 ip_address = request.META.get('REMOTE_ADDR')
-            
-            # Log login attempt
+
+            # Save Login Attempt
             LoginAttempt.objects.create(
                 username=login_input,
                 ip_address=ip_address,
                 is_successful=bool(user)
             )
-            
+
             if user:
-                if user.is_verified:
-                    login(request, user)
-                    user.last_login_ip = ip_address
-                    user.save()
-                    messages.success(request, f'Welcome back, {user.first_name}!')
-                    
-                    next_url = request.GET.get('next')
-                    if next_url:
-                        return redirect(next_url)
-                    return redirect('profile')
-                else:
-                    messages.error(request, 'Please verify your email first!')
-                    request.session['pending_verification_user_id'] = user.id
-                    return redirect('verify_otp', otp_type='signup')
+
+                if not user.is_verified:
+                    messages.error(
+                        request,
+                        'Please verify your email first!'
+                    )
+
+                    request.session[
+                        'pending_verification_user_id'
+                    ] = user.id
+
+                    return redirect(
+                        'verify_otp',
+                        otp_type='signup'
+                    )
+
+                login(request, user)
+
+                user.last_login_ip = ip_address
+                user.save()
+
+                messages.success(
+                    request,
+                    f'Welcome back, {user.first_name}!'
+                )
+
+                # Redirect to requested page
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url)
+
+                # Redirect based on role
+                if user.user_type == 'customer':
+                    return redirect('home')
+
+                elif user.user_type in ['admin', 'superuser']:
+                    return redirect('dashboard')
+
+                return redirect('home')
+
             else:
-                messages.error(request, 'Invalid credentials! Please check your email/username/phone and password.')
+                messages.error(
+                    request,
+                    'Invalid credentials! Please check your email, username, phone number, and password.'
+                )
+
     else:
         form = LoginForm()
+
         captcha = SimpleCaptcha()
         request.session['captcha_text'] = captcha.captcha_text
         request.session['captcha_key'] = captcha.captcha_key
-    
-    return render(request, 'accounts/login.html', {'form': form})
+
+    return render(
+        request,
+        'accounts/login.html',
+        {'form': form}
+    )
     
 def forgot_password_view(request):
     if request.method == 'POST':
@@ -591,3 +645,20 @@ def logout_view(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return redirect('login')
+
+def is_admin(user):
+    return user.is_authenticated and (
+        user.user_type == 'admin' or user.user_type == 'superuser'
+    )
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_view(request):
+    context = {
+        'total_users': User.objects.count(),
+        'customers': User.objects.filter(user_type='customer').count(),
+        'admins': User.objects.filter(user_type='admin').count(),
+        'superusers': User.objects.filter(user_type='superuser').count(),
+        'recent_users': User.objects.order_by('-date_joined')[:10],
+    }
+    return render(request, 'accounts/dashboard.html', context)

@@ -1,27 +1,719 @@
-{% extends 'base.html' %}
-{% block title %}User Management{% endblock %}
+{% extends 'sidebar.html' %}
 
 {% block content %}
-<div class="card shadow">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">User Management</h4>
-        <div>
-            <a href="?user_type=customer" class="btn btn-sm btn-light">Customers</a>
-            <a href="?user_type=admin" class="btn btn-sm btn-light">Admins</a>
-            <a href="?user_type=superuser" class="btn btn-sm btn-light">Superusers</a>
-            <a href="{% url 'user_management' %}" class="btn btn-sm btn-secondary">All Users</a>
+<style>
+    /* ===== BEAUTIFUL CLEAN USER MANAGEMENT UI - FULLY RESPONSIVE ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .um-container {
+        width: 100%;
+        padding: 24px;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #f5f7fb;
+        min-height: calc(100vh - 70px);
+        overflow-x: hidden;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    /* ===== BEAUTIFUL HERO SECTION - FULL WIDTH ===== */
+    .hero-section {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-radius: 24px;
+        padding: 32px 36px;
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -5%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%);
+        border-radius: 50%;
+    }
+
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -5%;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+        border-radius: 50%;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    .hero-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .hero-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(212, 175, 55, 0.15);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-icon i {
+        font-size: 30px;
+        color: #d4af37;
+    }
+
+    .hero-text h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: -0.3px;
+        margin-bottom: 6px;
+    }
+
+    .hero-text p {
+        font-size: 15px;
+        color: #94a3b8;
+    }
+
+    .hero-filters {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hero-filter {
+        padding: 8px 16px;
+        border-radius: 40px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.08);
+        color: #cbd5e1;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-filter i {
+        margin-right: 8px;
+        font-size: 13px;
+    }
+
+    .hero-filter:hover {
+        background: rgba(212, 175, 55, 0.2);
+        color: white;
+    }
+
+    .hero-filter.active {
+        background: #d4af37;
+        color: #0f172a;
+        border: none;
+    }
+
+    /* ===== STATS ROW - RESPONSIVE GRID ===== */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: #e2e8f0;
+        border-radius: 20px 20px 0 0;
+        overflow: hidden;
+    }
+
+    .stat-item {
+        background: white;
+        padding: 22px 24px;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stat-item:hover {
+        background: #fefce8;
+    }
+
+    .stat-left {
+        flex: 1;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #7e8aa2;
+        margin-bottom: 8px;
+    }
+
+    .stat-number {
+        font-size: 36px;
+        font-weight: 800;
+        color: #1a2634;
+        letter-spacing: -1px;
+    }
+
+    .stat-icon-right {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        background: #f5f7fb;
+    }
+
+    .stat-item:nth-child(1) .stat-icon-right {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+    .stat-item:nth-child(2) .stat-icon-right {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+    .stat-item:nth-child(3) .stat-icon-right {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+    .stat-item:nth-child(4) .stat-icon-right {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    /* ===== TABLE SECTION - WITH SCROLL ===== */
+    .table-wrapper {
+        background: white;
+        border-radius: 0 0 20px 20px;
+        overflow: hidden;
+        border: 1px solid #eef2f8;
+        width: 100%;
+    }
+
+    .table-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid #f0f2f5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .table-header h3 {
+        font-size: 17px;
+        font-weight: 600;
+        color: #1a2634;
+    }
+
+    .table-header h3 i {
+        color: #d4af37;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+
+    .record-badge {
+        font-size: 13px;
+        background: #f5f7fb;
+        padding: 6px 14px;
+        border-radius: 30px;
+        color: #5a6a85;
+    }
+
+    .record-badge i {
+        margin-right: 6px;
+    }
+
+    /* Table with horizontal scroll for small screens */
+    .table-scroll {
+        overflow-x: auto;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .user-table {
+        width: 100%;
+        min-width: 900px;
+        border-collapse: collapse;
+    }
+
+    .user-table th {
+        padding: 16px 18px;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #8a99b0;
+        background: #fafcff;
+        border-bottom: 1px solid #f0f2f5;
+    }
+
+    .user-table td {
+        padding: 14px 18px;
+        font-size: 14px;
+        color: #2d3a4a;
+        border-bottom: 1px solid #f5f7fa;
+    }
+
+    /* Even/Odd row colors */
+    .user-table tbody tr:nth-child(odd) {
+        background: #ffffff;
+    }
+
+    .user-table tbody tr:nth-child(even) {
+        background: #fafcff;
+    }
+
+    .user-table tbody tr:hover {
+        background: #fefce8;
+    }
+
+    /* Badges */
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 14px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .role-super {
+        background: #fef2f2;
+        color: #e5484d;
+    }
+
+    .role-admin {
+        background: #fffbeb;
+        color: #f5a623;
+    }
+
+    .role-customer {
+        background: #eef6ff;
+        color: #3b82f6;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .status-active {
+        background: #eafaf1;
+        color: #2ecc71;
+    }
+
+    .status-inactive {
+        background: #fef2f2;
+        color: #e5484d;
+    }
+
+    .verify-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .verify-yes {
+        background: #eafaf1;
+        color: #2ecc71;
+    }
+
+    .verify-no {
+        background: #fffbeb;
+        color: #f5a623;
+    }
+
+    /* Action Button */
+    .edit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        background: #f5f7fb;
+        color: #5a6a85;
+        transition: all 0.2s;
+        border: 1px solid #eef2f8;
+    }
+
+    .edit-btn:hover {
+        background: #d4af37;
+        color: white;
+        border-color: transparent;
+    }
+
+    /* Pagination */
+    .pagination-wrap {
+        padding: 18px 24px;
+        border-top: 1px solid #f0f2f5;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .page-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 38px;
+        height: 38px;
+        padding: 0 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        background: transparent;
+        color: #6c7a91;
+        transition: all 0.2s;
+        border: 1px solid #eef2f8;
+    }
+
+    .page-link:hover {
+        background: #f5f7fb;
+        border-color: #d4af37;
+    }
+
+    .page-link.active {
+        background: #d4af37;
+        color: #1a2634;
+        border: none;
+    }
+
+    /* Empty */
+    .empty-state {
+        text-align: center;
+        padding: 60px;
+    }
+
+    .empty-state i {
+        font-size: 56px;
+        color: #cbd5e1;
+        margin-bottom: 16px;
+    }
+
+    .empty-state p {
+        color: #8a99b0;
+        font-size: 15px;
+    }
+
+    /* ===== RESPONSIVE BREAKPOINTS - IMPROVED ===== */
+    @media (max-width: 1100px) {
+        .stats-row {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            background: transparent;
+            border-radius: 0;
+        }
+        .stat-item {
+            border-radius: 20px;
+            border: 1px solid #eef2f8;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .um-container {
+            padding: 20px;
+        }
+        .hero-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .hero-section {
+            padding: 24px 28px;
+        }
+        .hero-text h1 {
+            font-size: 24px;
+        }
+        .hero-text p {
+            font-size: 14px;
+        }
+        .hero-icon {
+            width: 52px;
+            height: 52px;
+        }
+        .hero-icon i {
+            font-size: 26px;
+        }
+        .hero-filter {
+            padding: 6px 18px;
+            font-size: 13px;
+        }
+        .stat-number {
+            font-size: 32px;
+        }
+        .stat-icon-right {
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+        }
+        .stat-label {
+            font-size: 12px;
+        }
+        .user-table th {
+            padding: 12px 14px;
+            font-size: 12px;
+        }
+        .user-table td {
+            padding: 11px 14px;
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .stats-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .stat-item {
+            padding: 16px 20px;
+        }
+        .stat-number {
+            font-size: 28px;
+        }
+        .stat-icon-right {
+            width: 44px;
+            height: 44px;
+            font-size: 22px;
+        }
+        .stat-label {
+            font-size: 12px;
+        }
+        .hero-filters {
+            width: 100%;
+            justify-content: center;
+        }
+        .hero-filter {
+            font-size: 12px;
+            padding: 5px 15px;
+        }
+        .hero-left {
+            flex-direction: column;
+            text-align: center;
+            width: 100%;
+        }
+        .table-header {
+            padding: 14px 18px;
+        }
+        .table-header h3 {
+            font-size: 15px;
+        }
+        .record-badge {
+            font-size: 12px;
+        }
+        .edit-btn span {
+            display: none;
+        }
+        .edit-btn {
+            padding: 6px 12px;
+        }
+        .role-badge, .status-badge, .verify-badge {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+    }
+
+    @media (max-width: 550px) {
+        .um-container {
+            padding: 16px;
+        }
+        .hero-section {
+            padding: 18px 22px;
+            margin-bottom: 24px;
+        }
+        .hero-text h1 {
+            font-size: 22px;
+        }
+        .hero-text p {
+            font-size: 13px;
+        }
+        .stat-item {
+            padding: 14px 18px;
+        }
+        .stat-number {
+            font-size: 26px;
+        }
+        .stat-icon-right {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+        }
+        .user-table th {
+            padding: 10px 12px;
+            font-size: 11px;
+        }
+        .user-table td {
+            padding: 10px 12px;
+            font-size: 12px;
+        }
+        .role-badge, .status-badge, .verify-badge {
+            padding: 3px 8px;
+            font-size: 10px;
+            gap: 4px;
+        }
+        .page-link {
+            min-width: 34px;
+            height: 34px;
+            font-size: 13px;
+        }
+        .pagination-wrap {
+            padding: 14px 18px;
+        }
+        .empty-state {
+            padding: 40px;
+        }
+        .empty-state i {
+            font-size: 48px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .hero-filter {
+            font-size: 11px;
+            padding: 4px 12px;
+        }
+        .hero-filter i {
+            margin-right: 5px;
+        }
+        .stat-number {
+            font-size: 24px;
+        }
+        .user-table td {
+            font-size: 11px;
+        }
+        .user-table th {
+            font-size: 10px;
+        }
+    }
+</style>
+
+<div class="um-container">
+    <!-- Beautiful Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="hero-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <div class="hero-text">
+                    <h1>User Management</h1>
+                    <p>Manage users, roles, and permissions with ease</p>
+                </div>
+            </div>
+            <div class="hero-filters">
+                <a href="?user_type=customer" class="hero-filter {% if request.GET.user_type == 'customer' %}active{% endif %}">
+                    <i class="fas fa-user"></i> Customers
+                </a>
+                <a href="?user_type=admin" class="hero-filter {% if request.GET.user_type == 'admin' %}active{% endif %}">
+                    <i class="fas fa-user-shield"></i> Admins
+                </a>
+                <a href="?user_type=superuser" class="hero-filter {% if request.GET.user_type == 'superuser' %}active{% endif %}">
+                    <i class="fas fa-crown"></i> Superusers
+                </a>
+                <a href="{% url 'user_management' %}" class="hero-filter">
+                    <i class="fas fa-globe"></i> All Users
+                </a>
+            </div>
         </div>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
+
+    <!-- Stats Row with Icons on Right Side -->
+    <div class="stats-row">
+        <div class="stat-item">
+            <div class="stat-left">
+                <div class="stat-label">Total Users</div>
+                <div class="stat-number">{{ users.paginator.count }}</div>
+            </div>
+            <div class="stat-icon-right">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-left">
+                <div class="stat-label">Superusers</div>
+                <div class="stat-number" id="superuserCount">0</div>
+            </div>
+            <div class="stat-icon-right">
+                <i class="fas fa-crown"></i>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-left">
+                <div class="stat-label">Administrators</div>
+                <div class="stat-number" id="adminCount">0</div>
+            </div>
+            <div class="stat-icon-right">
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-left">
+                <div class="stat-label">Customers</div>
+                <div class="stat-number" id="customerCount">0</div>
+            </div>
+            <div class="stat-icon-right">
+                <i class="fas fa-user-check"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-wrapper">
+        <div class="table-header">
+            <h3><i class="fas fa-table-list"></i> Registered Users</h3>
+            <div class="record-badge"><i class="fas fa-database"></i> {{ users|length }} records</div>
+        </div>
+
+        <div class="table-scroll">
+            <table class="user-table" id="userTable">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Mobile</th>
-                        <th>User Type</th>
+                        <th>Role</th>
                         <th>Status</th>
                         <th>Verified</th>
                         <th>Joined</th>
@@ -30,77 +722,114 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                    <tr>
+                    <tr data-role="{{ user.user_type|lower }}">
                         <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.mobile_number }}</td>
+                        <td style="font-weight: 600;">{{ user.username }}</td>
+                        <td style="color: #6c7a91;">{{ user.email }}</td>
+                        <td>{{ user.mobile_number|default:"—" }}</td>
                         <td>
-                            <span class="badge {% if user.user_type == 'superuser' %}bg-danger{% elif user.user_type == 'admin' %}bg-warning{% else %}bg-info{% endif %}">
-                                {{ user.user_type }}
+                            <span class="role-badge 
+                                {% if user.user_type == 'superuser' %}role-super
+                                {% elif user.user_type == 'admin' %}role-admin
+                                {% else %}role-customer{% endif %}">
+                                <i class="fas 
+                                    {% if user.user_type == 'superuser' %}fa-crown
+                                    {% elif user.user_type == 'admin' %}fa-shield-alt
+                                    {% else %}fa-user{% endif %}"></i>
+                                {{ user.user_type|title }}
                             </span>
                         </td>
                         <td>
-                            {% if user.is_active %}
-                                <span class="badge bg-success">Active</span>
-                            {% else %}
-                                <span class="badge bg-danger">Inactive</span>
-                            {% endif %}
+                            <span class="status-badge {% if user.is_active %}status-active{% else %}status-inactive{% endif %}">
+                                <i class="fas {% if user.is_active %}fa-check-circle{% else %}fa-ban{% endif %}"></i>
+                                {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
                         </td>
                         <td>
-                            {% if user.is_verified %}
-                                <span class="badge bg-success">Yes</span>
-                            {% else %}
-                                <span class="badge bg-warning">No</span>
-                            {% endif %}
+                            <span class="verify-badge {% if user.is_verified %}verify-yes{% else %}verify-no{% endif %}">
+                                <i class="fas {% if user.is_verified %}fa-check-double{% else %}fa-clock{% endif %}"></i>
+                                {% if user.is_verified %}Verified{% else %}Pending{% endif %}
+                            </span>
                         </td>
-                        <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
                         <td>
                             {% if user.user_type != 'superuser' or request.user.user_type == 'superuser' %}
-                                <a href="{% url 'edit_user_permissions' user.id %}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-edit"></i> Edit
+                                <a href="{% url 'edit_user_permissions' user.id %}" class="edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Edit</span>
                                 </a>
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="9" class="text-center">No users found.</td>
+                        <td colspan="9">
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <p>No users found</p>
+                            </div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        
+
+        <!-- Pagination -->
         {% if users.has_other_pages %}
-            <nav aria-label="User pagination">
-                <ul class="pagination justify-content-center">
-                    {% if users.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ users.previous_page_number }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
-                                Previous
-                            </a>
-                        </li>
-                    {% endif %}
-                    
-                    {% for num in users.paginator.page_range %}
-                        <li class="page-item {% if users.number == num %}active{% endif %}">
-                            <a class="page-link" href="?page={{ num }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
-                                {{ num }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                    
-                    {% if users.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ users.next_page_number }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
-                                Next
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+        <div class="pagination-wrap">
+            {% if users.has_previous %}
+                <a class="page-link" href="?page={{ users.previous_page_number }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
+                    <i class="fas fa-chevron-left"></i> Prev
+                </a>
+            {% endif %}
+            
+            {% for num in users.paginator.page_range %}
+                {% if num == 1 or num == users.paginator.num_pages or num >= users.number|add:"-2" and num <= users.number|add:"2" %}
+                    <a class="page-link {% if users.number == num %}active{% endif %}" 
+                       href="?page={{ num }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
+                        {{ num }}
+                    </a>
+                {% elif num == 2 and users.number > 4 %}
+                    <span style="padding: 0 8px; color: #a0afc3; font-size: 14px;">...</span>
+                {% elif num == users.paginator.num_pages|add:"-1" and users.number < users.paginator.num_pages|add:"-3" %}
+                    <span style="padding: 0 8px; color: #a0afc3; font-size: 14px;">...</span>
+                {% endif %}
+            {% endfor %}
+            
+            {% if users.has_next %}
+                <a class="page-link" href="?page={{ users.next_page_number }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
 </div>
+
+<script>
+    (function calculateCounts() {
+        const rows = document.querySelectorAll('#userTable tbody tr');
+        let superCount = 0, adminCount = 0, customerCount = 0;
+        
+        rows.forEach(row => {
+            if (row.querySelector('.empty-state')) return;
+            const roleCell = row.querySelector('td:nth-child(5)');
+            if (roleCell) {
+                const text = roleCell.innerText.toLowerCase();
+                if (text.includes('superuser')) superCount++;
+                else if (text.includes('admin')) adminCount++;
+                else if (text.includes('customer')) customerCount++;
+            }
+        });
+        
+        const superEl = document.getElementById('superuserCount');
+        const adminEl = document.getElementById('adminCount');
+        const customerEl = document.getElementById('customerCount');
+        
+        if (superEl) superEl.innerText = superCount;
+        if (adminEl) adminEl.innerText = adminCount;
+        if (customerEl) customerEl.innerText = customerCount;
+    })();
+</script>
 {% endblock %}

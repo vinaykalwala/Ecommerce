@@ -33,4 +33,5 @@ urlpatterns = [
     # Admin/Superuser Management URLs
     path('users/manage/', views.user_management_view, name='user_management'),
     path('users/<int:user_id>/permissions/', views.edit_user_permissions_view, name='edit_user_permissions'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
 ]

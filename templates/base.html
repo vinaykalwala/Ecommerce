@@ -2,112 +2,862 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}E-commerce App{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>NOIR | Premium E-Commerce</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        .footer {
-            background-color: #f8f9fa;
-            padding: 2rem 0;
-            margin-top: 3rem;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #111111;
+            line-height: 1.5;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .alert {
-            margin-top: 1rem;
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f7f9;
+            --bg-elevated: #ffffff;
+            --text-primary: #121212;
+            --text-secondary: #5a5a5a;
+            --text-tertiary: #8a8a8a;
+            --border-light: #eeeeef;
+            --border-medium: #e2e2e4;
+            --accent: #1a1a1a;
+            --accent-gold: #c7a23b;
+            --accent-gold-light: #e6d5a8;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --transition: all 0.25s ease;
         }
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
+
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 28px;
+        }
+
+        /* Header */
+        .site-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 12px 28px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        .logo i { color: var(--accent-gold); font-size: 24px; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-link {
+            padding: 8px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            border-radius: 40px;
+            transition: var(--transition);
+        }
+        .nav-link i { margin-right: 8px; }
+        .nav-link:hover { background: var(--bg-secondary); color: var(--accent); }
+        .nav-link.active { background: var(--accent); color: white; }
+
+        .search-wrapper {
+            flex: 1;
+            max-width: 320px;
+        }
+        .search-form { position: relative; }
+        .search-input {
+            width: 100%;
+            padding: 11px 44px 11px 18px;
+            border: 1px solid var(--border-medium);
+            border-radius: 60px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .search-btn {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            cursor: pointer;
         }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+
+        .right-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon-btn {
+            position: relative;
+            background: transparent;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 18px;
+            transition: var(--transition);
+        }
+        .icon-btn:hover { background: var(--bg-secondary); color: var(--accent); }
+        .badge {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            background: var(--accent-gold);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 30px;
+        }
+
+        .profile-dropdown { position: relative; }
+        .profile-btn {
+            background: var(--bg-secondary);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 240px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            margin-top: 12px;
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--border-light);
+            z-index: 100;
+        }
+        .profile-dropdown:hover .dropdown-menu-custom { opacity: 1; visibility: visible; }
+        .dropdown-item-custom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .dropdown-item-custom i { width: 20px; color: var(--accent-gold); }
+        .dropdown-item-custom:hover { background: var(--bg-secondary); color: var(--accent); }
+        .dropdown-divider { height: 1px; background: var(--border-light); margin: 8px 0; }
+
+        .auth-buttons { display: flex; gap: 8px; }
+        .btn-login {
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            background: transparent;
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+        }
+        .btn-signup {
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            background: var(--accent);
+            color: white;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: var(--bg-secondary);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Mobile Search */
+        .mobile-search-bar {
+            display: none;
+            padding: 12px 20px 16px;
+            background: white;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .mobile-search-form { position: relative; }
+        .mobile-search-input {
+            width: 100%;
+            padding: 12px 48px 12px 18px;
+            border: 1px solid var(--border-medium);
+            border-radius: 60px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+        }
+        .mobile-search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Mobile Menu - FIXED TOGGLE */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1100;
+            display: none;
+        }
+        .mobile-menu-overlay.active { display: block; }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            z-index: 1101;
+            transition: 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+        }
+        .mobile-menu.open { right: 0; }
+        .mobile-menu-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mobile-menu-header h3 { font-size: 20px; font-weight: 700; }
+        .mobile-menu-close {
+            background: var(--bg-secondary);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .mobile-menu-items {
+            flex: 1;
+            padding: 20px;
+        }
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        .mobile-menu-item i { width: 28px; color: var(--accent-gold); font-size: 18px; }
+        .mobile-menu-item:hover { color: var(--accent-gold); padding-left: 8px; }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -480px;
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background: white;
+            z-index: 1200;
+            transition: 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { padding: 24px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; }
+        .cart-body { flex: 1; overflow-y: auto; padding: 20px 24px; background: var(--bg-secondary); }
+        .cart-footer { padding: 20px 24px 28px; border-top: 1px solid var(--border-light); background: white; }
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 1150;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        .cart-overlay.show { display: block; }
+        .cart-item { display: flex; gap: 16px; background: white; padding: 16px; border-radius: var(--radius-md); margin-bottom: 14px; border: 1px solid var(--border-light); }
+        .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm); background: #f0f0f0; }
+        .qty-btn { width: 32px; height: 32px; border: 1px solid var(--border-medium); background: white; border-radius: 10px; cursor: pointer; }
+        .qty-btn:hover { background: var(--accent-gold); color: white; border-color: var(--accent-gold); }
+        .btn-checkout { background: var(--accent); color: white; border: none; padding: 14px; border-radius: var(--radius-md); font-weight: 600; width: 100%; cursor: pointer; }
+        .btn-secondary { background: transparent; border: 1.5px solid var(--border-medium); padding: 12px; border-radius: var(--radius-md); width: 100%; margin-top: 10px; cursor: pointer; }
+
+        /* ==================== MODERN PREMIUM FOOTER ==================== */
+        .premium-footer {
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            color: #e0e0e0;
+            padding: 60px 0 0;
+            margin-top: auto;
+        }
+        .footer-top {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+            gap: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-brand h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: white;
+        }
+        .footer-brand h3 i { color: var(--accent-gold); margin-right: 8px; }
+        .footer-brand p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+        .footer-social a {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .footer-social a:hover {
+            background: var(--accent-gold);
+            color: #0a0a0a;
+            transform: translateY(-3px);
+        }
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .footer-col ul {
+            list-style: none;
+        }
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+        .footer-col ul li a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .footer-col ul li a:hover {
+            color: var(--accent-gold);
+            padding-left: 4px;
+        }
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 60px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 13px;
+        }
+        .newsletter-form input::placeholder { color: #777; }
+        .newsletter-form button {
+            background: var(--accent-gold);
+            border: none;
+            border-radius: 60px;
+            padding: 0 24px;
+            color: #0a0a0a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .newsletter-form button:hover {
+            background: #d4af37;
+            transform: translateY(-2px);
+        }
+        .payment-icons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .payment-icons i {
+            font-size: 28px;
+            color: #888;
+            transition: var(--transition);
+        }
+        .payment-icons i:hover { color: var(--accent-gold); }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 12px;
+            color: #777;
+        }
+        .footer-bottom-links {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+        .footer-bottom-links a {
+            color: #777;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .footer-bottom-links a:hover { color: var(--accent-gold); }
+        .back-to-top-btn {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ccc;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .back-to-top-btn:hover {
+            background: var(--accent-gold);
+            color: #0a0a0a;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .header-container { padding: 12px 20px; }
+            .search-wrapper { display: none; }
+            .mobile-search-bar { display: block; }
+            .nav-links { display: none; }
+            .mobile-toggle { display: block; }
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 0 20px 40px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .logo { font-size: 18px; }
+            .logo i { font-size: 20px; }
+            .icon-btn { width: 40px; height: 40px; font-size: 16px; }
+            .profile-btn { padding: 6px 14px; font-size: 12px; }
+            .container { padding: 0 16px; margin: 24px auto; }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            .footer-bottom-links { justify-content: center; gap: 16px; }
+            .cart-sidebar { max-width: 100%; right: -100%; }
+        }
+
+        @media (max-width: 480px) {
+            .header-container { padding: 10px 16px; }
+            .auth-buttons { display: none; }
         }
     </style>
-    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'profile' %}">E-Shop</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile' %}">
-                                <i class="fas fa-user"></i> Profile
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'address_list' %}">
-                                <i class="fas fa-map-marker-alt"></i> Addresses
-                            </a>
-                        </li>
-                        {% if user.user_type == 'admin' or user.user_type == 'superuser' %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'user_management' %}">
-                                <i class="fas fa-users"></i> Manage Users
-                            </a>
-                        </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="signupDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-plus"></i> Signup
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'customer_signup' %}">As Customer</a></li>
-                                <li><a class="dropdown-item" href="{% url 'admin_signup' %}">As Admin</a></li>
-                                <li><a class="dropdown-item" href="{% url 'superuser_signup' %}">As Superuser</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container mt-3">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<!-- Header -->
+<div class="site-header">
+    <div class="header-container">
+        <a class="logo" href="#"><i class="fas fa-gem"></i> NOIR</a>
+
+        <div class="nav-links">
+            <a href="#" class="nav-link active"><i class="fas fa-home"></i> Home</a>
+            <a href="#" class="nav-link"><i class="fas fa-mobile-alt"></i> Shop</a>
+        </div>
+
+        <div class="search-wrapper">
+            <form class="search-form" action="#">
+                <input type="text" class="search-input" placeholder="Search for mobiles...">
+                <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <div class="right-icons">
+            <button class="icon-btn" onclick="alert('Wishlist coming soon')">
+                <i class="far fa-heart"></i>
+                <span class="badge" id="wishlistCount">0</span>
+            </button>
+            <button class="icon-btn" onclick="toggleCart(event)">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="badge" id="cartCount">0</span>
+            </button>
+
+            {% if user.is_authenticated %}
+            <div class="profile-dropdown">
+                <button class="profile-btn"><i class="fas fa-user-circle"></i> {{ user.username|truncatechars:8 }} <i class="fas fa-chevron-down" style="font-size: 10px;"></i></button>
+                <div class="dropdown-menu-custom">
+                    <a class="dropdown-item-custom" href="{% url 'profile' %}"><i class="fas fa-user"></i> My Profile</a>
+                    <a class="dropdown-item-custom" href="{% url 'address_list' %}"><i class="fas fa-map-marker-alt"></i> Addresses</a>
+                    {% if user.user_type == 'admin' or user.user_type == 'superuser' %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item-custom" href="{% url 'user_management' %}"><i class="fas fa-users"></i> Manage Users</a>
+                    <a class="dropdown-item-custom" href="{% url 'dashboard' %}"><i class="fas fa-chart-line"></i> Dashboard</a>
+                    {% endif %}
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item-custom" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
-            {% endfor %}
-        {% endif %}
-        
-        {% block content %}
-        {% endblock %}
+            </div>
+            {% else %}
+            <div class="auth-buttons">
+                <a href="{% url 'login' %}" class="btn-login">Login</a>
+                <a href="{% url 'customer_signup' %}" class="btn-signup">Sign Up</a>
+            </div>
+            {% endif %}
+
+            <button class="mobile-toggle" id="mobileMenuToggleBtn"><i class="fas fa-bars"></i></button>
+        </div>
     </div>
 
-    <footer class="footer">
-        <div class="container text-center">
-            <p>&copy; 2024 E-Shop. All rights reserved.</p>
-        </div>
-    </footer>
+    <div class="mobile-search-bar">
+        <form class="mobile-search-form" action="#">
+            <input type="text" class="mobile-search-input" placeholder="Search for mobiles...">
+            <button type="submit" class="mobile-search-btn"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_js %}{% endblock %}
+<!-- Mobile Menu Overlay & Side Menu -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+        <h3><i class="fas fa-gem" style="color: var(--accent-gold);"></i> NOIR</h3>
+        <button class="mobile-menu-close" id="mobileMenuCloseBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="mobile-menu-items">
+        <a href="#" class="mobile-menu-item"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="mobile-menu-item"><i class="fas fa-mobile-alt"></i>Shop</a>
+        <a href="#" class="mobile-menu-item" onclick="alert('Wishlist coming soon')"><i class="far fa-heart"></i> Wishlist</a>
+        <a href="#" class="mobile-menu-item" onclick="toggleCart(event); closeMobileMenu();"><i class="fas fa-shopping-bag"></i> Cart</a>
+        {% if not user.is_authenticated %}
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light);">
+            <a href="{% url 'login' %}" class="mobile-menu-item"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="{% url 'customer_signup' %}" class="mobile-menu-item"><i class="fas fa-user-plus"></i> Sign Up</a>
+        </div>
+        {% else %}
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light);">
+            <a href="{% url 'profile' %}" class="mobile-menu-item"><i class="fas fa-user"></i> My Profile</a>
+            <a href="{% url 'logout' %}" class="mobile-menu-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Cart Sidebar -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h5><i class="fas fa-shopping-bag"></i> Shopping Bag</h5>
+        <button onclick="toggleCart()" style="background: none; border: none; font-size: 22px; cursor: pointer;"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-body" id="cartItemsContainer">
+        <div style="text-align:center; padding:60px 20px;">
+            <i class="fas fa-bag-shopping" style="font-size:60px; opacity:0.5;"></i>
+            <p>Your bag is empty</p>
+        </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:18px;">
+            <strong>Subtotal</strong>
+            <strong id="cartTotal" style="font-size:22px;">$0.00</strong>
+        </div>
+        <button class="btn-checkout" onclick="alert('Checkout coming soon')">Proceed to Checkout</button>
+        <button class="btn-secondary" onclick="toggleCart()">Continue Shopping</button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <span><i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}crown{% endif %}"></i> {{ message }}</span>
+                <button type="button" class="btn-close" data-dismiss="alert">&times;</button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% block content %}
+    <div style="text-align: center; padding: 60px 20px;">
+        <i class="fas fa-mobile-alt" style="font-size: 64px; color: var(--accent-gold); margin-bottom: 20px;"></i>
+        <h2>Welcome to NOIR</h2>
+        <p style="color: var(--text-secondary); margin-top: 12px;">Discover the finest collection of premium mobiles.</p>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Modern Premium Footer -->
+<footer class="premium-footer">
+    <div class="footer-top">
+        <div class="footer-brand">
+            <h3><i class="fas fa-gem"></i> NOIR</h3>
+            <p>Defining modern minimalism since 2020. Curated essentials for the discerning collector who values quality and timeless design.</p>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>EXPLORE</h4>
+            <ul>
+                <li><a href="#">New Arrivals</a></li>
+                <li><a href="#">Best Sellers</a></li>
+                <li><a href="#">Signature Collection</a></li>
+                <li><a href="#">Limited Edition</a></li>
+                <li><a href="#">Gift Cards</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>SUPPORT</h4>
+            <ul>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Shipping Info</a></li>
+                <li><a href="#">Returns & Exchanges</a></li>
+                <li><a href="#">Order Tracking</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>INSIDER</h4>
+            <p style="font-size:13px; margin-bottom:12px;">Subscribe for 10% off your first order</p>
+            <div class="newsletter-form">
+                <input type="email" placeholder="Your email address">
+                <button><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div class="payment-icons">
+                <i class="fab fa-cc-visa"></i>
+                <i class="fab fa-cc-mastercard"></i>
+                <i class="fab fa-cc-amex"></i>
+                <i class="fab fa-cc-paypal"></i>
+                <i class="fab fa-apple-pay"></i>
+                <i class="fab fa-google-pay"></i>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Settings</a>
+            <a href="#">Accessibility</a>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <span><i class="fas fa-gem"></i> © 2025 NOIR — Modern Essentials</span>
+            <button class="back-to-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                <i class="fas fa-arrow-up"></i> Top
+            </button>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile Menu Toggle - FULLY WORKING
+    const mobileMenuToggle = document.getElementById('mobileMenuToggleBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileMenuClose = document.getElementById('mobileMenuCloseBtn');
+
+    function openMobileMenu() {
+        mobileMenu.classList.add('open');
+        mobileMenuOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMobileMenu() {
+        mobileMenu.classList.remove('open');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', openMobileMenu);
+    }
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+    }
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    }
+
+    // Cart functionality
+    function getCart() {
+        let cart = localStorage.getItem('noir_cart');
+        return cart ? JSON.parse(cart) : [];
+    }
+    function saveCart(cart) {
+        localStorage.setItem('noir_cart', JSON.stringify(cart));
+        updateCartCounts();
+    }
+    function updateCartCounts() {
+        let cart = getCart();
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountSpan = document.getElementById('cartCount');
+        if (cartCountSpan) cartCountSpan.innerText = totalItems;
+        updateCartSidebar(cart);
+    }
+    function updateCartSidebar(cart) {
+        const container = document.getElementById('cartItemsContainer');
+        const footer = document.getElementById('cartFooter');
+        if (!container) return;
+        if (!cart || cart.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:60px 20px;">
+                <i class="fas fa-bag-shopping" style="font-size:60px; opacity:0.5;"></i>
+                <p>Your bag is empty</p>
+                <button class="btn-secondary" style="width:auto; margin-top:16px;" onclick="toggleCart()">Shop Now</button>
+            </div>`;
+            if (footer) footer.style.display = 'none';
+            return;
+        }
+        let total = 0;
+        let html = '';
+        cart.forEach((item, idx) => {
+            total += item.price * item.quantity;
+            html += `<div class="cart-item">
+                <img src="${item.image || 'https://placehold.co/80x80/e9e9ef/888?text=item'}" class="cart-item-img">
+                <div style="flex:1">
+                    <div style="font-weight:600;">${item.title.substring(0, 32)}</div>
+                    <div style="color:var(--accent-gold); margin-top:6px;">$${item.price.toFixed(2)}</div>
+                    <div style="display:flex; gap:12px; margin-top:12px;">
+                        <button class="qty-btn" onclick="updateQuantity(${idx}, -1)">−</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity(${idx}, 1)">+</button>
+                        <button style="margin-left:auto; background:none; border:none; cursor:pointer;" onclick="removeFromCart(${idx})"><i class="far fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+        if (footer) footer.style.display = 'block';
+        const totalSpan = document.getElementById('cartTotal');
+        if (totalSpan) totalSpan.innerHTML = `$${total.toFixed(2)}`;
+    }
+    window.updateQuantity = function(idx, change) {
+        let cart = getCart();
+        if (cart[idx]) {
+            cart[idx].quantity += change;
+            if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+            saveCart(cart);
+        }
+    };
+    window.removeFromCart = function(idx) {
+        let cart = getCart();
+        cart.splice(idx, 1);
+        saveCart(cart);
+    };
+    window.toggleCart = function(event) {
+        if (event) event.preventDefault();
+        const sidebar = document.getElementById('cartSidebar');
+        const overlay = document.getElementById('cartOverlay');
+        if (sidebar) sidebar.classList.toggle('open');
+        if (overlay) overlay.classList.toggle('show');
+    };
+    if (!localStorage.getItem('noir_cart')) {
+        localStorage.setItem('noir_cart', JSON.stringify([]));
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCartCounts();
+    });
+</script>
 </body>
 </html>

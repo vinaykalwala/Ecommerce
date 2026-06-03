@@ -1,0 +1,19 @@
+{% extends 'sidebar.html' %}
+
+{% block content %}
+<div class="page-content">
+    <!-- Your existing dashboard content here - NO extra margin needed -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Admin Dashboard</h2>
+            <p>Welcome, {{ request.user.first_name }}!</p>
+            <p>Role: <strong>{{ request.user.user_type|title }}</strong></p>
+        </div>
+    </div>
+
+    <!-- Your stats cards, tables, etc. -->
+    <div class="row">
+        <!-- Your content -->
+    </div>
+</div>
+{% endblock %}
