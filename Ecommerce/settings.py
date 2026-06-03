@@ -66,6 +66,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 
 
@@ -116,3 +118,20 @@ RAZORPAY_KEY_ID = "your_key_id"
 RAZORPAY_KEY_SECRET = "your_secret"
 
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'profile'
+LOGOUT_REDIRECT_URL = 'login'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 3600  
+
+ADMIN_REGISTRATION_CODE = 'ADMIN2026'  
+SUPERUSER_REGISTRATION_CODE = 'SUPER2026'  
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'projecttestmail02@gmail.com'
+EMAIL_HOST_PASSWORD = 'iizo uksz ngai kyir'
+

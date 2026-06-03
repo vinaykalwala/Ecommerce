@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Verify OTP{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Verify {{ otp_type|title }} OTP</h4>
+            </div>
+            <div class="card-body text-center">
+                <i class="fas fa-envelope fa-4x text-info mb-3"></i>
+                <h5>OTP Sent to {{ destination }}</h5>
+                <p class="text-muted">Please enter the 6-digit verification code sent to your email.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <input type="text" name="otp_code" class="form-control form-control-lg text-center" placeholder="Enter OTP" maxlength="6" required>
+                        {% if form.otp_code.errors %}
+                            <div class="alert alert-danger mt-2">{{ form.otp_code.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-info btn-lg w-100">Verify OTP</button>
+                </form>
+                
+                <hr>
+                <p class="mb-0">Didn't receive the code?</p>
+                <a href="?resend=1" class="btn btn-link">Resend OTP</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

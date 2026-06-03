@@ -1,47 +1,104 @@
 {% extends 'base.html' %}
+{% block title %}My Addresses{% endblock %}
 
 {% block content %}
-
-<h2>My Addresses</h2>
-
-<a href="{% url 'add_address' %}">
-    Add Address
-</a>
-
-<hr>
-
-{% for address in addresses %}
-
-<p>
-{{ address.full_name }}
-</p>
-
-<p>
-{{ address.address_line_1 }}
-</p>
-
-<p>
-{{ address.city }}
-</p>
-
-{% if address.is_default %}
-    <strong>Default</strong>
-{% endif %}
-
-<a href="{% url 'edit_address' address.id %}">
-    Edit
-</a>
-
-<a href="{% url 'delete_address' address.id %}">
-    Delete
-</a>
-
-<a href="{% url 'set_default_address' address.id %}">
-    Make Default
-</a>
-
-<hr>
-
-{% endfor %}
-
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">My Addresses</h4>
+        <a href="{% url 'add_address' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-plus"></i> Add New Address
+        </a>
+    </div>
+    <div class="card-body">
+        {% if addresses %}
+            <div class="row">
+                {% for address in addresses %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 {% if address.is_default %}border-success{% endif %}">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">{{ address.get_address_type_display }}</h6>
+                                <div>
+                                    <a href="{% url 'edit_address' address.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'delete_address' address.pk %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-1"><strong>{{ address.full_name }}</strong></p>
+                                <p class="mb-1">{{ address.mobile_number }}</p>
+                                {% if address.alternate_mobile_number %}
+                                    <p class="mb-1">Alt: {{ address.alternate_mobile_number }}</p>
+                                {% endif %}
+                                <p class="mb-1">{{ address.address_line_1 }}</p>
+                                {% if address.address_line_2 %}
+                                    <p class="mb-1">{{ address.address_line_2 }}</p>
+                                {% endif %}
+                                <p class="mb-1">{{ address.city }}, {{ address.state }}</p>
+                                <p class="mb-1">Postal Code: {{ address.postal_code }}</p>
+                                <p class="mb-1">{{ address.country }}</p>
+                                {% if address.landmark %}
+                                    <p class="mb-1">Landmark: {{ address.landmark }}</p>
+                                {% endif %}
+                                {% if address.delivery_instructions %}
+                                    <p class="mb-1 text-muted small">
+                                        <i class="fas fa-info-circle"></i> {{ address.delivery_instructions }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                {% if address.is_default %}
+                                    <span class="badge bg-success">Default Address</span>
+                                {% else %}
+                                    <a href="{% url 'set_default_address' address.pk %}" class="btn btn-sm btn-outline-secondary">
+                                        Set as Default
+                                    </a>
+                                {% endif %}
+                                {% if address.is_billing_address %}
+                                    <span class="badge bg-info">Billing Address</span>
+                                {% endif %}
+                                {% if address.is_shipping_address %}
+                                    <span class="badge bg-primary">Shipping Address</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% if addresses.has_other_pages %}
+                <nav aria-label="Address pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if addresses.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ addresses.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in addresses.paginator.page_range %}
+                            <li class="page-item {% if addresses.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        
+                        {% if addresses.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ addresses.next_page_number }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+                <h5>No addresses found</h5>
+                <p class="text-muted">Add your first address to get started</p>
+                <a href="{% url 'add_address' %}" class="btn btn-primary">Add Address</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

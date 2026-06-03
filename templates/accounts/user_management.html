@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">User Management</h4>
+        <div>
+            <a href="?user_type=customer" class="btn btn-sm btn-light">Customers</a>
+            <a href="?user_type=admin" class="btn btn-sm btn-light">Admins</a>
+            <a href="?user_type=superuser" class="btn btn-sm btn-light">Superusers</a>
+            <a href="{% url 'user_management' %}" class="btn btn-sm btn-secondary">All Users</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>User Type</th>
+                        <th>Status</th>
+                        <th>Verified</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.mobile_number }}</td>
+                        <td>
+                            <span class="badge {% if user.user_type == 'superuser' %}bg-danger{% elif user.user_type == 'admin' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ user.user_type }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if user.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_verified %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-warning">No</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+                        <td>
+                            {% if user.user_type != 'superuser' or request.user.user_type == 'superuser' %}
+                                <a href="{% url 'edit_user_permissions' user.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center">No users found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if users.has_other_pages %}
+            <nav aria-label="User pagination">
+                <ul class="pagination justify-content-center">
+                    {% if users.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ users.previous_page_number }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
+                                Previous
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in users.paginator.page_range %}
+                        <li class="page-item {% if users.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    
+                    {% if users.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ users.next_page_number }}{% if request.GET.user_type %}&user_type={{ request.GET.user_type }}{% endif %}">
+                                Next
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,15 +1,112 @@
 {% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
 
 {% block content %}
-
-<h2>My Profile</h2>
-
-<p>{{ request.user.get_full_name }}</p>
-<p>{{ request.user.email }}</p>
-<p>{{ request.user.mobile_number }}</p>
-
-<a href="{% url 'edit_profile' %}">
-    Edit Profile
-</a>
-
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Profile Picture</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" class="profile-pic mb-3" alt="Profile Picture">
+                {% else %}
+                    <div class="profile-pic bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px; border-radius: 50%;">
+                        <i class="fas fa-user fa-4x"></i>
+                    </div>
+                {% endif %}
+                <h5>{{ user.get_full_name|default:user.username }}</h5>
+                <p class="text-muted">{{ user.user_type|title }}</p>
+                <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Full Name:</th>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mobile Number:</th>
+                        <td>{{ user.mobile_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gender:</th>
+                        <td>{{ profile.get_gender_display|default:"Not specified" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Date of Birth:</th>
+                        <td>{{ profile.date_of_birth|date:"F d, Y"|default:"Not specified" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Bio:</th>
+                        <td>{{ profile.bio|default:"No bio added" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Account Type:</th>
+                        <td>
+                            <span class="badge {% if user.user_type == 'superuser' %}bg-danger{% elif user.user_type == 'admin' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ user.user_type|upper }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Email Verified:</th>
+                        <td>
+                            {% if user.email_verified %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-warning">No</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Addresses</h5>
+                <a href="{% url 'address_list' %}" class="btn btn-sm btn-light">View All</a>
+            </div>
+            <div class="card-body">
+                {% if addresses %}
+                    {% for address in addresses %}
+                        <div class="border-bottom mb-3 pb-3">
+                            <h6>{{ address.address_type|title }}</h6>
+                            <p class="mb-0">{{ address.full_name }}</p>
+                            <p class="mb-0">{{ address.address_line_1 }}</p>
+                            {% if address.address_line_2 %}
+                                <p class="mb-0">{{ address.address_line_2 }}</p>
+                            {% endif %}
+                            <p class="mb-0">{{ address.city }}, {{ address.state }} - {{ address.postal_code }}</p>
+                            <p class="mb-0">{{ address.country }}</p>
+                            <p class="mb-0">Mobile: {{ address.mobile_number }}</p>
+                            {% if address.is_default %}
+                                <span class="badge bg-success mt-2">Default Address</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No addresses added yet.</p>
+                    <a href="{% url 'add_address' %}" class="btn btn-primary btn-sm">Add Address</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

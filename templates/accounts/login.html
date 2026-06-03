@@ -1,16 +1,61 @@
 {% extends 'base.html' %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Login</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="login_input" class="form-label">Email / Username / Mobile Number</label>
+                        <input type="text" name="login_input" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="captcha" class="form-label">Enter Captcha</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="captcha" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="{% url 'captcha' %}" alt="Captcha" id="captcha_img" class="img-fluid border">
+                                <button type="button" class="btn btn-sm btn-secondary mt-1" onclick="refreshCaptcha()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100">Login</button>
+                </form>
+                <hr>
+                <p class="text-center">
+                    <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+                </p>
+                <p class="text-center mb-0">
+                    Don't have an account? 
+                    <a href="{% url 'customer_signup' %}">Signup as Customer</a> |
+                    <a href="{% url 'admin_signup' %}">Signup as Admin</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h2>Login</h2>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit">
-        Login
-    </button>
-</form>
-
+<script>
+function refreshCaptcha() {
+    document.getElementById('captcha_img').src = "{% url 'captcha' %}?" + new Date().getTime();
+}
+</script>
 {% endblock %}
