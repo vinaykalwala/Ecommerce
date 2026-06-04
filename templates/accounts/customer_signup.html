@@ -1,38 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Sign up — Mobile Commerce</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            min-height: 100vh;
+        }
+
+        /* Main Layout */
+        .signup-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ========= LEFT COLUMN - FEATURES ========= */
+        .features-column {
+            flex: 1.1;
+            background: #F8F6F3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 56px;
+            position: relative;
+        }
+
+        .features-column::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(#E0D9D0 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            max-width: 560px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .title-section h1 {
+            font-size: 38px;
+            font-weight: 800;
+            color: #1A1A1A;
+            line-height: 1.2;
+            letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+
+        .title-section p {
+            font-size: 15px;
+            color: #6B6B6B;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .feature-card {
+            background: #FFFFFF;
+            padding: 28px 20px;
+            border-radius: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #EFECE8;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: #D4A843;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: #F8F6F3;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .feature-icon i {
+            font-size: 30px;
+            color: #D4A843;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: #8A8A8A;
+            line-height: 1.4;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 56px;
+            padding-top: 32px;
+            border-top: 1px solid #E8E4DE;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1A1A1A;
+        }
+
+        .stat-item p {
+            font-size: 12px;
+            color: #8A8A8A;
+            margin-top: 6px;
+        }
+
+        /* ========= RIGHT COLUMN - BEAUTIFUL PROFESSIONAL FORM ========= */
+        .form-column {
+            flex: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 56px;
+            background: linear-gradient(145deg, #FFFFFF 0%, #FDF9F2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Elegant background shapes */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-shape-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.04) 0%, transparent 70%);
+            top: -150px;
+            right: -100px;
+            animation: floatShape1 15s infinite alternate;
+        }
+
+        .bg-shape-2 {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.03) 0%, transparent 70%);
+            bottom: -100px;
+            left: -80px;
+            animation: floatShape2 18s infinite alternate;
+        }
+
+        .bg-shape-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(200, 170, 100, 0.05) 0%, transparent 70%);
+            top: 40%;
+            right: 20%;
+            animation: floatShape3 12s infinite alternate;
+        }
+
+        .bg-shape-4 {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.06) 0%, transparent 70%);
+            bottom: 25%;
+            left: 10%;
+            animation: floatShape4 14s infinite alternate;
+        }
+
+        @keyframes floatShape1 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            100% { transform: translate(-30px, 20px) scale(1.1); opacity: 0.7; }
+        }
+
+        @keyframes floatShape2 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            100% { transform: translate(25px, -30px) scale(1.15); opacity: 0.6; }
+        }
+
+        @keyframes floatShape3 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.35; }
+            100% { transform: translate(-20px, -15px) scale(1.2); opacity: 0.65; }
+        }
+
+        @keyframes floatShape4 {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            100% { transform: translate(15px, 20px) scale(1.1); opacity: 0.6; }
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 42px;
+        }
+
+        .form-header h2 {
+            font-size: 34px;
+            font-weight: 800;
+            color: #1A1A1A;
+            letter-spacing: -0.8px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            font-size: 15px;
+            color: #8A8A8A;
+        }
+
+        /* Professional Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4A4A4A;
+            letter-spacing: 0.3px;
+        }
+
+        /* Beautiful Professional Input Fields */
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1.5px solid #E8E8E8;
+            border-radius: 16px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            background: #FFFFFF;
+            color: #1A1A1A;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #D4A843;
+            box-shadow: 0 0 0 4px rgba(212, 168, 67, 0.1);
+        }
+
+        .input-group input::placeholder,
+        .input-group select::placeholder {
+            color: #B0B0B0;
+            font-weight: 400;
+        }
+
+        .error-message {
+            background: #FEF3F2;
+            color: #DC2626;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #A0A0A0;
+            margin-top: 4px;
+        }
+
+        /* Professional Submit Button */
+        .btn-submit {
+            width: 100%;
+            background: #1A1A1A;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-submit:hover {
+            background: #D4A843;
+            color: #1A1A1A;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 168, 67, 0.25);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 36px 0 24px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #E8E8E8;
+        }
+
+        .divider-text {
+            font-size: 13px;
+            color: #A0A0A0;
+        }
+
+        .login-link {
+            text-align: center;
+            font-size: 14px;
+            color: #8A8A8A;
+        }
+
+        .login-link a {
+            color: #D4A843;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Professional Action Tags */
+        .action-tags {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .action-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #F8F6F3;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1A1A1A;
+            transition: all 0.2s;
+        }
+
+        .action-tag i {
+            color: #D4A843;
+            font-size: 13px;
+        }
+
+        .action-tag:hover {
+            background: #D4A843;
+            color: white;
+        }
+
+        .action-tag:hover i {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .features-column {
+                padding: 48px 40px;
+            }
+            .form-column {
+                padding: 48px 40px;
+            }
+            .form-wrapper {
+                max-width: 540px;
+            }
+            .input-group input {
+                padding: 14px 18px;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .signup-container {
+                flex-direction: column;
+            }
+            .features-column {
+                justify-content: flex-start;
+                padding: 48px 40px;
+            }
+            .form-column {
+                padding: 56px 40px;
+            }
+            .content-wrapper {
+                max-width: 100%;
+            }
+            .form-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .features-column {
+                padding: 40px 32px;
+            }
+            .form-column {
+                padding: 48px 32px;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .stats-row {
+                gap: 32px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .title-section h1 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .features-column {
+                padding: 36px 24px;
+            }
+            .form-column {
+                padding: 44px 24px;
+            }
+            .title-section h1 {
+                font-size: 28px;
+            }
+            .form-header h2 {
+                font-size: 30px;
+            }
+            .input-group input {
+                padding: 14px 16px;
+            }
+            .btn-submit {
+                padding: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .features-column {
+                padding: 32px 20px;
+            }
+            .form-column {
+                padding: 40px 20px;
+            }
+            .title-section h1 {
+                font-size: 26px;
+            }
+            .action-tag {
+                padding: 6px 14px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+
 {% extends 'base.html' %}
 {% block title %}Customer Signup{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Customer Registration</h4>
+<div class="signup-container">
+    <!-- LEFT COLUMN: Features -->
+    <div class="features-column">
+        <div class="content-wrapper">
+            <div class="title-section">
+                <h1>Start your<br>shopping journey</h1>
+                <p>Create an account to browse, save favorites, and checkout seamlessly</p>
             </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="alert alert-danger mt-1">
-                                {{ field.errors }}
-                            </div>
-                        {% endif %}
-                        {% if field.help_text %}
-                            <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
+                    <h3>Browse & Shop</h3>
+                    <p>Explore curated collections from top brands</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Save Wishlist</h3>
+                    <p>Keep your favorite items for later</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>Add to Cart</h3>
+                    <p>Quick and easy one-tap checkout</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Secure Checkout</h3>
+                    <p>Multiple payment options with protection</p>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <h3>50K+</h3>
+                    <p>Active Shoppers</p>
+                </div>
+                <div class="stat-item">
+                    <h3>4.9★</h3>
+                    <p>Customer Rating</p>
+                </div>
+                <div class="stat-item">
+                    <h3>2-Day</h3>
+                    <p>Fast Delivery</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Beautiful Professional Form -->
+    <div class="form-column">
+        <!-- Elegant background shapes -->
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        <div class="bg-shape bg-shape-3"></div>
+        <div class="bg-shape bg-shape-4"></div>
+
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h2>Create account</h2>
+                <p>Sign up to start shopping</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    {% for field in form %}
+                        <div class="input-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error-message">
+                                    {% for error in field.errors %}
+                                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if field.help_text %}
+                                <small class="help-text">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
                     {% endfor %}
-                    
-                    <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-                </form>
-                <hr>
-                <p class="text-center mb-0">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Sign Up <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">Already have an account?</span>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="login-link">
+                <a href="{% url 'login' %}">Sign in</a>
+            </div>
+
+            <div class="action-tags">
+                <div class="action-tag">
+                    <i class="fas fa-heart"></i> Wishlist
+                </div>
+                <div class="action-tag">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                </div>
+                <div class="action-tag">
+                    <i class="fas fa-bolt"></i> Fast Checkout
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
+</body>
+</html>

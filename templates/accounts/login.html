@@ -1,61 +1,933 @@
-{% extends 'base.html' %}
-{% block title %}Login{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>NOIR | SIGN IN — Zigzag Commerce Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+   {% load static %}
+   <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            min-height: 100vh;
+        }
+
+        /* MAIN CONTAINER — form on LEFT, cards on RIGHT */
+        .login-master {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+            background: #FFFFFF;
+        }
+
+        /* ===== LEFT PANEL — Sign-in Form with Background Image ===== */
+        .form-panel {
+            width: 45%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: url('{% static "images/mobile.jpg" %}') center center / cover no-repeat;
+            position: relative;
+            padding: 48px 56px;
+        }
+
+        
+        .form-card {
+            width: 100%;
+            max-width: 460px;
+            background: rgba(255,255,255,0.98);
+            border-radius: 32px;
+            padding: 40px 36px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .form-header {
+            margin-bottom: 34px;
+            text-align: center;
+        }
+        .form-header h3 {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+        .form-header p {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .alert-message {
+            background: #F8F8F8;
+            border-left: 3px solid #D4AF37;
+            padding: 14px 20px;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #333333;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+        .input-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2C2C2C;
+            display: block;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+        .input-group input {
+            width: 100%;
+            height: 54px;
+            background: #FFFFFF;
+            border: 1.5px solid #E8E8E8;
+            border-radius: 20px;
+            padding: 0 22px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            color: #000000;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        .input-group input::placeholder {
+            color: #BBBBBB;
+        }
+
+        /* CAPTCHA */
+        .captcha-section {
+            margin-bottom: 12px;
+        }
+        .captcha-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        .captcha-row input {
+            flex: 2;
+            height: 56px;
+            border: 1.5px solid #E8E8E8;
+            border-radius: 20px;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+        .captcha-image {
+            flex: 1;
+            background: #FAFAFA;
+            border-radius: 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #E8E8E8;
+            overflow: hidden;
+            min-width: 140px;
+        }
+        #captcha_img {
+            height: 56px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .refresh-captcha {
+            text-align: right;
+            margin-top: 8px;
+        }
+        .refresh-btn {
+            background: transparent;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+            color: #999999;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            transition: all 0.2s;
+        }
+        .refresh-btn:hover {
+            color: #D4AF37;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .signin-btn {
+            width: 100%;
+            height: 56px;
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 34px;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        .signin-btn:hover {
+            background: #D4AF37;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px -12px rgba(0,0,0,0.3);
+        }
+
+        .form-footer {
+            margin-top: 36px;
+            text-align: center;
+        }
+        .forgot-link {
+            font-size: 12px;
+            color: #888888;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+        .forgot-link:hover { color: #D4AF37; }
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: #CCCCCC;
+            margin: 16px 0 16px;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #EFEFEF;
+        }
+        .signup-link a {
+            font-weight: 700;
+            color: #000000;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .signup-link a:hover { color: #D4AF37; text-decoration: underline; }
+        .secure-badge {
+            margin-top: 14px;
+            font-size: 11px;
+            color: #AAAAAA;
+        }
+        .secure-badge i {
+            margin-right: 4px;
+        }
+
+        /* ===== RIGHT PANEL — 6 Cards (3x2 grid, no gaps, alternating white/soft color) ===== */
+        .cards-panel {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 36px;
+            border-left: 1px solid #EEEEEE;
+        }
+
+        .cards-container {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        /* Hero description above cards */
+        .hero-mini {
+            margin-bottom: 36px;
+            text-align: left;
+        }
+
+        .hero-mini .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.04);
+            padding: 5px 16px;
+            border-radius: 60px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #1A1A1A;
+            margin-bottom: 20px;
+            letter-spacing: 0.4px;
+        }
+
+        .hero-mini .badge i {
+            font-size: 11px;
+        }
+
+        .hero-mini h2 {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            color: #000000;
+            margin-bottom: 14px;
+            line-height: 1.2;
+        }
+
+        .hero-mini p {
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        /* 3x2 grid — NO GAPS between cards */
+        .zigzag-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: auto;
+            margin: 0;
+            width: 100%;
+            background: #F8F8F8;
+        }
+
+        /* Card styling — no margins, sharp edges */
+        .zz-card {
+            padding: 26px 20px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: none;
+            min-height: 190px;
+            cursor: default;
+        }
+
+        /* White card */
+        .zz-card-white {
+            background: #FFFFFF;
+            border-bottom: 1px solid #EFEFEF;
+            border-right: 1px solid #EFEFEF;
+        }
+
+        /* Soft card - using #F8F6F3 instead of black */
+        .zz-card-soft {
+            background: #F8F6F3;
+            border-bottom: 1px solid #E8E4DE;
+            border-right: 1px solid #E8E4DE;
+        }
+
+        /* Remove right border from 3rd column cards */
+        .zz-card:nth-child(3n) {
+            border-right: none;
+        }
+
+        /* Last row cards — remove bottom border */
+        .zz-card:nth-last-child(-n+3) {
+            border-bottom: none;
+        }
+
+        /* Card icon */
+        .zz-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            transition: transform 0.2s;
+        }
+
+        .zz-card:hover .zz-icon {
+            transform: scale(1.05);
+        }
+
+        .zz-card-white .zz-icon {
+            background: #F0F0F0;
+            color: #D4AF37;
+        }
+
+        .zz-card-soft .zz-icon {
+            background: #EAE5DE;
+            color: #D4AF37;
+        }
+
+        .zz-icon i {
+            font-size: 24px;
+        }
+
+        .zz-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .zz-card-white h3 {
+            color: #1A1A1A;
+        }
+
+        .zz-card-soft h3 {
+            color: #1A1A1A;
+        }
+
+        .zz-card p {
+            font-size: 12.5px;
+            line-height: 1.45;
+            margin-bottom: 10px;
+        }
+
+        .zz-card-white p {
+            color: #5A5A5A;
+        }
+
+        .zz-card-soft p {
+            color: #5A5A5A;
+        }
+
+        .zz-meta {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+
+        .zz-card-white .zz-meta {
+            color: #AAAAAA;
+        }
+
+        .zz-card-soft .zz-meta {
+            color: #D4AF37;
+        }
+
+        /* Hover effect */
+        .zz-card:hover {
+            transform: translateY(-4px);
+            z-index: 2;
+            box-shadow: 0 16px 28px -12px rgba(0,0,0,0.12);
+        }
+
+        .zz-card-white:hover {
+            background: #FEFEFE;
+        }
+
+        .zz-card-soft:hover {
+            background: #FDFAF7;
+        }
+
+        /* Stats row below cards */
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid #E5E5E5;
+        }
+        .stat-cell {
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 26px;
+            font-weight: 800;
+            color: #000000;
+        }
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #777777;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* ===== PERFECT RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .cards-panel {
+                padding: 36px 28px;
+            }
+            .form-panel {
+                padding: 48px 40px;
+            }
+            .form-card {
+                padding: 36px 30px;
+            }
+            .zz-card {
+                padding: 22px 16px;
+                min-height: 175px;
+            }
+            .hero-mini h2 {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 1050px) {
+            .zz-card h3 {
+                font-size: 15px;
+            }
+            .zz-card p {
+                font-size: 11px;
+            }
+            .zz-icon {
+                width: 46px;
+                height: 46px;
+            }
+            .zz-icon i {
+                font-size: 20px;
+            }
+            .stat-number {
+                font-size: 22px;
+            }
+        }
+        
+        @media (max-width: 960px) {
+            .login-master {
+                flex-direction: column;
+            }
+            .form-panel {
+                width: 100%;
+                padding: 48px 32px;
+                min-height: 500px;
+            }
+            .cards-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #EEEEEE;
+                padding: 44px 36px;
+            }
+            .hero-mini p {
+                max-width: 100%;
+            }
+            .zigzag-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .form-card {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 800px) {
+            .cards-panel {
+                padding: 36px 28px;
+            }
+            .zz-card {
+                padding: 18px 14px;
+                min-height: 165px;
+            }
+            .hero-mini h2 {
+                font-size: 28px;
+            }
+            .form-card {
+                padding: 32px 28px;
+            }
+            .form-header h3 {
+                font-size: 34px;
+            }
+        }
+        
+        @media (max-width: 700px) {
+            .zigzag-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .zz-card:nth-child(3n) {
+                border-right: 1px solid #EFEFEF;
+            }
+            .zz-card-white, .zz-card-soft {
+                border-right: 1px solid #EFEFEF;
+            }
+            .zz-card:nth-child(even) {
+                border-right: none;
+            }
+            .zz-card:nth-last-child(-n+2) {
+                border-bottom: none;
+            }
+            .zz-card:nth-last-child(-n+3) {
+                border-bottom: 1px solid #EFEFEF;
+            }
+            .zz-card:nth-last-child(2),
+            .zz-card:nth-last-child(1) {
+                border-bottom: none;
+            }
+            .zz-card-soft {
+                border-bottom-color: #E8E4DE;
+                border-right-color: #E8E4DE;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .cards-panel {
+                padding: 32px 24px;
+            }
+            .form-panel {
+                padding: 40px 24px;
+            }
+            .form-card {
+                padding: 28px 24px;
+            }
+            .hero-mini {
+                margin-bottom: 28px;
+            }
+            .hero-mini h2 {
+                font-size: 26px;
+            }
+            .hero-mini p {
+                font-size: 13px;
+            }
+            .zz-card {
+                padding: 16px 14px;
+                min-height: 155px;
+            }
+            .zz-card h3 {
+                font-size: 14px;
+            }
+            .zz-card p {
+                font-size: 10.5px;
+            }
+            .zz-meta {
+                font-size: 9px;
+            }
+            .zz-icon {
+                width: 42px;
+                height: 42px;
+                margin-bottom: 12px;
+            }
+            .zz-icon i {
+                font-size: 18px;
+            }
+            .stats-row {
+                gap: 20px;
+                margin-top: 28px;
+                padding-top: 22px;
+                flex-wrap: wrap;
+            }
+            .stat-cell {
+                min-width: 80px;
+            }
+            .stat-number {
+                font-size: 20px;
+            }
+            .form-header h3 {
+                font-size: 32px;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .cards-panel {
+                padding: 28px 20px;
+            }
+            .form-panel {
+                padding: 36px 20px;
+            }
+            .form-card {
+                padding: 24px 20px;
+            }
+            .captcha-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .captcha-image {
+                min-width: auto;
+            }
+            .hero-mini h2 {
+                font-size: 24px;
+            }
+            .zz-card {
+                padding: 14px 12px;
+                min-height: 145px;
+            }
+            .zz-card h3 {
+                font-size: 13px;
+            }
+            .zz-card p {
+                font-size: 10px;
+            }
+            .signin-btn {
+                height: 52px;
+                font-size: 14px;
+            }
+            .form-header h3 {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 450px) {
+            .zigzag-grid {
+                grid-template-columns: 1fr;
+            }
+            .zz-card {
+                border-right: none !important;
+                border-bottom: 1px solid #EFEFEF !important;
+                min-height: auto;
+                padding: 18px 16px;
+                flex-direction: row;
+                align-items: center;
+                gap: 18px;
+            }
+            .zz-card-soft {
+                border-bottom-color: #E8E4DE !important;
+            }
+            .zz-card:nth-last-child(1) {
+                border-bottom: none !important;
+            }
+            .zz-icon {
+                margin-bottom: 0;
+                flex-shrink: 0;
+            }
+            .zz-card > div {
+                flex: 1;
+            }
+            .stats-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .stat-cell {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                border-bottom: 1px solid #EFEFEF;
+                padding-bottom: 8px;
+            }
+            .stat-cell:last-child {
+                border-bottom: none;
+            }
+            .stat-number {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .cards-panel {
+                padding: 24px 16px;
+            }
+            .form-panel {
+                padding: 32px 16px;
+            }
+            .form-card {
+                padding: 20px 16px;
+            }
+            .hero-mini h2 {
+                font-size: 22px;
+            }
+            .zz-card {
+                padding: 14px 12px;
+                gap: 12px;
+            }
+            .zz-icon {
+                width: 38px;
+                height: 38px;
+            }
+            .zz-icon i {
+                font-size: 16px;
+            }
+            .zz-card h3 {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Login</h4>
+
+<div class="login-master">
+    <!-- LEFT PANEL: Sign‑in Form with Background Image -->
+    <div class="form-panel">
+        <div class="form-card">
+            <div class="form-header">
+                <h3>Sign in</h3>
+                <p>Access your mobile commerce account</p>
             </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <label for="login_input" class="form-label">Email / Username / Mobile Number</label>
-                        <input type="text" name="login_input" class="form-control" required>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-message">
+                        <i class="fas fa-circle-info"></i> {{ message }}
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="captcha" class="form-label">Enter Captcha</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="text" name="captcha" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <img src="{% url 'captcha' %}" alt="Captcha" id="captcha_img" class="img-fluid border">
-                                <button type="button" class="btn btn-sm btn-secondary mt-1" onclick="refreshCaptcha()">
-                                    <i class="fas fa-sync-alt"></i> Refresh
-                                </button>
-                            </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="input-group">
+                    <label>Email or username</label>
+                    <input type="text" name="login_input" placeholder="hello@noir.com" required autocomplete="username">
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="············" required autocomplete="current-password">
+                </div>
+
+                <div class="input-group captcha-section">
+                    <label>Verification code</label>
+                    <div class="captcha-row">
+                        <input type="text" name="captcha" placeholder="Enter characters" required>
+                        <div class="captcha-image">
+                            <img src="{% url 'captcha' %}" id="captcha_img" alt="Security code">
                         </div>
                     </div>
-                    
-                    <button type="submit" class="btn btn-success w-100">Login</button>
-                </form>
-                <hr>
-                <p class="text-center">
-                    <a href="{% url 'forgot_password' %}">Forgot Password?</a>
-                </p>
-                <p class="text-center mb-0">
-                    Don't have an account? 
-                    <a href="{% url 'customer_signup' %}">Signup as Customer</a> |
-                    <a href="{% url 'admin_signup' %}">Signup as Admin</a>
-                </p>
+                    <div class="refresh-captcha">
+                        <button type="button" class="refresh-btn" onclick="refreshCaptcha()">
+                            <i class="fas fa-sync-alt"></i> Refresh code
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="signin-btn">
+                    Sign in <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <div>
+                    <a href="{% url 'forgot_password' %}" class="forgot-link">Forgot password?</a>
+                </div>
+                <div class="divider">
+                    <span>New to Noir?</span>
+                </div>
+                <div class="signup-link">
+                    <a href="{% url 'customer_signup' %}">Create an account</a>
+                    {% if request.user.is_superuser %}
+                        <span class="secure-badge">| <a href="{% url 'admin_signup' %}" style="color:#D4AF37;">Admin portal</a></span>
+                    {% endif %}
+                </div>
+                <div class="secure-badge">
+                    <i class="fas fa-shield-alt"></i> Secure · Encrypted access
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: 6 Cards — 3x2 grid, alternating white / soft #F8F6F3 -->
+    <div class="cards-panel">
+        <div class="cards-container">
+            <div class="hero-mini">
+                <div class="badge">
+                    <i class="fas fa-mobile-alt"></i> MOBILE COMMERCE
+                </div>
+                <h2>Shop smarter.<br>Faster. Anywhere.</h2>
+                <p>Mobile-first platform with instant checkout, live tracking, and exclusive drops.</p>
+            </div>
+
+            <!-- 6 cards grid — NO GAPS, alternating white / #F8F6F3 -->
+            <div class="zigzag-grid">
+                <!-- Card 1 - White -->
+                <div class="zz-card zz-card-white">
+                    <div class="zz-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h3>Instant Checkout</h3>
+                        <p>One-tap payment, biometric auth, digital wallets.</p>
+                        <span class="zz-meta">⚡ 3 seconds</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 - Soft (#F8F6F3) -->
+                <div class="zz-card zz-card-soft">
+                    <div class="zz-icon">
+                        <i class="fas fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <h3>Live Tracking</h3>
+                        <p>Real-time GPS & push notifications.</p>
+                        <span class="zz-meta">📍 Live updates</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 - White -->
+                <div class="zz-card zz-card-white">
+                    <div class="zz-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div>
+                        <h3>App-Only Drops</h3>
+                        <p>Early access to limited collections & flash sales.</p>
+                        <span class="zz-meta">🎯 2h early</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 - Soft (#F8F6F3) -->
+                <div class="zz-card zz-card-soft">
+                    <div class="zz-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h3>Secure Payments</h3>
+                        <p>PCI compliant, encrypted transactions.</p>
+                        <span class="zz-meta">🔒 256-bit SSL</span>
+                    </div>
+                </div>
+
+                <!-- Card 5 - White -->
+                <div class="zz-card zz-card-white">
+                    <div class="zz-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div>
+                        <h3>Loyalty Rewards</h3>
+                        <p>Earn points on every purchase.</p>
+                        <span class="zz-meta">💎 1 point = $1</span>
+                    </div>
+                </div>
+
+                <!-- Card 6 - Soft (#F8F6F3) -->
+                <div class="zz-card zz-card-soft">
+                    <div class="zz-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div>
+                        <h3>24/7 Support</h3>
+                        <p>In-app chat & priority assistance.</p>
+                        <span class="zz-meta">🎧 Live agents</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust metrics -->
+            <div class="stats-row">
+                <div class="stat-cell">
+                    <div class="stat-number">2M+</div>
+                    <div class="stat-label">APP DOWNLOADS</div>
+                </div>
+                <div class="stat-cell">
+                    <div class="stat-number">4.9★</div>
+                    <div class="stat-label">STORE RATING</div>
+                </div>
+                <div class="stat-cell">
+                    <div class="stat-number">99.5%</div>
+                    <div class="stat-label">ON-TIME DELIVERY</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-function refreshCaptcha() {
-    document.getElementById('captcha_img').src = "{% url 'captcha' %}?" + new Date().getTime();
-}
+    function refreshCaptcha() {
+        const captchaImg = document.getElementById('captcha_img');
+        if (captchaImg) {
+            const baseUrl = "{% url 'captcha' %}";
+            captchaImg.src = baseUrl + "?" + new Date().getTime();
+        }
+    }
+    window.addEventListener('load', function() {
+        refreshCaptcha();
+    });
 </script>
+
 {% endblock %}
+</body>
+</html>
