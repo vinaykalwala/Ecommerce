@@ -2,35 +2,309 @@
 {% block title %}Verify OTP{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-header bg-info text-white">
-                <h4 class="mb-0">Verify {{ otp_type|title }} OTP</h4>
-            </div>
-            <div class="card-body text-center">
-                <i class="fas fa-envelope fa-4x text-info mb-3"></i>
-                <h5>OTP Sent to {{ destination }}</h5>
-                <p class="text-muted">Please enter the 6-digit verification code sent to your email.</p>
-                
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <div class="mb-3">
-                        <input type="text" name="otp_code" class="form-control form-control-lg text-center" placeholder="Enter OTP" maxlength="6" required>
-                        {% if form.otp_code.errors %}
-                            <div class="alert alert-danger mt-2">{{ form.otp_code.errors }}</div>
-                        {% endif %}
+
+<style>body{
+    margin:0;
+    background:#f5f5f5;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.otp-page{
+    padding:20px;
+    display:flex;
+    justify-content:center;
+}
+
+.otp-card{
+    width:100%;
+    max-width:1100px;
+    background:#fff;
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:0 15px 50px rgba(0,0,0,.08);
+}
+
+.otp-layout{
+    display:grid;
+    grid-template-columns:420px 1fr;
+}
+
+.left-panel{
+    background:#111;
+    color:white;
+    padding:60px 40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.security-icon{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:34px;
+    margin-bottom:25px;
+}
+
+.left-panel h2{
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+.left-panel p{
+    color:#cfcfcf;
+    line-height:1.8;
+}
+
+.features{
+    margin-top:40px;
+}
+
+.feature-item{
+    margin-bottom:18px;
+    font-size:15px;
+}
+
+.feature-item i{
+    margin-right:10px;
+}
+
+.right-panel{
+    padding:60px;
+    text-align:center;
+}
+
+.mail-icon{
+    width:90px;
+    height:90px;
+    margin:auto;
+    border-radius:50%;
+    background:#f2f2f2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:35px;
+    color:#111;
+    margin-bottom:20px;
+}
+
+.verify-title{
+    font-size:36px;
+    font-weight:700;
+    color:#111;
+    margin-bottom:10px;
+}
+
+.verify-subtitle{
+    color:#666;
+    margin-bottom:20px;
+}
+
+.destination-box{
+    background:#fafafa;
+    border:1px solid #e5e5e5;
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:25px;
+    font-weight:600;
+}
+
+.otp-input{
+    width:100%;
+    height:70px;
+    border:2px solid #ddd;
+    border-radius:16px;
+    text-align:center;
+    font-size:28px;
+    letter-spacing:12px;
+    outline:none;
+    box-sizing:border-box;
+}
+
+.otp-input:focus{
+    border-color:#111;
+}
+
+.error-box{
+    margin-top:15px;
+    padding:12px;
+    background:#fff1f1;
+    border:1px solid #ffcaca;
+    border-radius:10px;
+    color:#c62828;
+}
+
+.verify-btn{
+    width:100%;
+    margin-top:20px;
+    height:58px;
+    border:none;
+    border-radius:16px;
+    background:#111;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.verify-btn:hover{
+    background:#000;
+}
+
+.divider{
+    height:1px;
+    background:#e5e5e5;
+    margin:35px 0;
+}
+
+.timer{
+    color:#777;
+    margin-bottom:10px;
+}
+
+.resend-text{
+    color:#777;
+    margin-bottom:8px;
+}
+
+.resend-link{
+    text-decoration:none;
+    color:#111;
+    font-weight:600;
+}
+
+.resend-link:hover{
+    text-decoration:underline;
+}
+
+@media(max-width:900px){
+
+    .otp-layout{
+        grid-template-columns:1fr;
+    }
+
+    .left-panel{
+        display:none;
+    }
+
+    .right-panel{
+        padding:35px 25px;
+    }
+
+    .verify-title{
+        font-size:28px;
+    }
+}</style>
+<div class="otp-page">
+
+    <div class="otp-card">
+
+        <div class="otp-layout">
+
+            <!-- Left Side -->
+            <div class="left-panel">
+
+                <div class="security-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+
+                <h2>Secure Verification</h2>
+
+                <p>
+                    We use OTP verification to keep your
+                    account secure and protect your personal
+                    information.
+                </p>
+
+                <div class="features">
+
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        Safe Authentication
                     </div>
-                    
-                    <button type="submit" class="btn btn-info btn-lg w-100">Verify OTP</button>
-                </form>
-                
-                <hr>
-                <p class="mb-0">Didn't receive the code?</p>
-                <a href="?resend=1" class="btn btn-link">Resend OTP</a>
+
+                    <div class="feature-item">
+                        <i class="fas fa-lock"></i>
+                        Encrypted Security
+                    </div>
+
+                    <div class="feature-item">
+                        <i class="fas fa-user-shield"></i>
+                        Account Protection
+                    </div>
+
+                </div>
+
             </div>
+
+            <!-- Right Side -->
+            <div class="right-panel">
+
+                <div class="mail-icon">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+
+                <h3 class="verify-title">
+                    Verify {{ otp_type|title }} OTP
+                </h3>
+
+                <p class="verify-subtitle">
+                    Enter the 6-digit code sent to
+                </p>
+
+                <div class="destination-box">
+                    {{ destination }}
+                </div>
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="text"
+                        name="otp_code"
+                        class="otp-input"
+                        placeholder="000000"
+                        maxlength="6"
+                        required>
+
+                    {% if form.otp_code.errors %}
+                    <div class="error-box">
+                        {{ form.otp_code.errors }}
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="verify-btn">
+                        Verify OTP
+                    </button>
+
+                </form>
+
+                <div class="divider"></div>
+
+                <div class="timer">
+                    OTP expires in 05:00
+                </div>
+
+                <p class="resend-text">
+                    Didn't receive the code?
+                </p>
+
+                <a href="?resend=1" class="resend-link">
+                    Resend OTP
+                </a>
+
+            </div>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock %}

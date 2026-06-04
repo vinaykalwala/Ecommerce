@@ -1,109 +1,991 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">{{ title }}</h4>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/address_form.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<div class="address-container">
+
+    <!-- LEFT PANEL -->
+
+    <div class="left-panel">
+
+        <div class="location-circle">
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+
+        <h2>Add Address</h2>
+
+        <div class="gold-line"></div>
+
+        <p>
+            Provide accurate address details for
+            smooth and secure delivery experience.
+        </p>
+        <div class="features-box">
+            <div class="feature-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>100% Secure Address Storage</span>
             </div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Address Type</label>
-                            {{ form.address_type }}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Full Name</label>
-                            {{ form.full_name }}
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Mobile Number</label>
-                            {{ form.mobile_number }}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Alternate Mobile Number</label>
-                            {{ form.alternate_mobile_number }}
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Address Line 1</label>
-                        {{ form.address_line_1 }}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Address Line 2</label>
-                        {{ form.address_line_2 }}
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">City</label>
-                            {{ form.city }}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">State</label>
-                            {{ form.state }}
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Country</label>
-                            {{ form.country }}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Postal Code</label>
-                            {{ form.postal_code }}
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Landmark</label>
-                        {{ form.landmark }}
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Delivery Instructions</label>
-                        {{ form.delivery_instructions }}
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check">
-                                {{ form.is_default }}
-                                <label class="form-check-label">Set as Default Address</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check">
-                                {{ form.is_billing_address }}
-                                <label class="form-check-label">Use as Billing Address</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check">
-                                {{ form.is_shipping_address }}
-                                <label class="form-check-label">Use as Shipping Address</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Save Address</button>
-                        <a href="{% url 'address_list' %}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
+
+            <div class="feature-item">
+                <i class="fas fa-truck-fast"></i>
+                <span>Faster Delivery Processing</span>
+            </div>
+
+            <div class="feature-item">
+                <i class="fas fa-location-dot"></i>
+                <span>Accurate Order Tracking</span>
             </div>
         </div>
+
+
+        <div class="location-image">
+            <img src="{% static 'images/address-3d-gold.png' %}">
+        </div>
+
+        <div class="security-box">
+
+            <div class="shield">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+
+            <div>
+                <h4>Your Information is Safe</h4>
+                <p>
+                    We use secure encryption to protect
+                    your personal address details.
+                </p>
+            </div>
+
+        </div>
+
     </div>
+
+    <!-- RIGHT PANEL -->
+
+    <div class="right-panel">
+
+        <h1>{{ title }}</h1>
+        <p class="subtitle">
+            Fill in your delivery details
+        </p>
+
+        <div class="gold-divider"></div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="field">
+                    <label>Address Type</label>
+
+                    <div class="input-icon">
+                        <i class="fa-solid fa-house"></i>
+                        {{ form.address_type }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Full Name</label>
+
+                    <div class="input-icon">
+                        <i class="fa-solid fa-user"></i>
+                        {{ form.full_name }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label>Mobile Number</label>
+                    <div class="input-icon">
+                        <i class="fa-solid fa-mobile-alt"></i>
+                        {{ form.mobile_number }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Alternate Mobile Number</label>
+                    <div class="input-icon">
+                        <i class="fa-solid fa-mobile-alt"></i>
+                        {{ form.alternate_mobile_number }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Address Line 1</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ form.address_line_1 }}
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Address Line 2</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-map"></i>
+                    {{ form.address_line_2 }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label>City</label>
+
+                    <div class="input-icon">
+                        <i class="fa-solid fa-city"></i>
+                        {{ form.city }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label>State</label>
+                    <div class="input-icon">
+                        <i class="fa-solid fa-map"></i>
+                        {{ form.state }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field">
+                    <label>Country</label>
+                    <div class="input-icon">
+                        <i class="fa-solid fa-globe"></i>
+                        {{ form.country }}
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Postal Code</label>
+
+                    <div class="input-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                        {{ form.postal_code }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Landmark</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-map-pin"></i>
+                    {{ form.landmark }}
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Delivery Instructions</label>
+                <div class="input-icon">
+                    <i class="fa-solid fa-info-circle"></i>
+                    {{ form.delivery_instructions }}
+                </div>
+            </div>
+
+            <div class="check-row">
+
+                <div class="check-card">
+                    <i class="fa-solid fa-star"></i>
+                    {{ form.is_default }}
+                    <span>Set as Default Address</span>
+                </div>
+
+                <div class="check-card">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    {{ form.is_billing_address }}
+                    <span>Use as Billing Address</span>
+                </div>
+
+                <div class="check-card">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    {{ form.is_shipping_address }}
+                    <span>Use as Shipping Address</span>
+                </div>
+            </div>
+            <div class="button-row">
+
+                <button type="submit" class="save-btn">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Save Address
+                </button>
+
+                <a href="{% url 'address_list' %}" class="cancel-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
+<style>
+    :root {
+        --dark: #0f172a;
+        --gold: #d4af37;
+        --white: #fff;
+        --border: #e5e7eb;
+    }
+
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .address-container {
+        width: 98%;
+        margin: 15px auto;
+        margin: 10px auto;
+        background: white;
+
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        border-radius: 24px;
+        box-shadow:
+            0 10px 40px rgba(0, 0, 0, .08),
+            0 2px 8px rgba(0, 0, 0, .04);
+
+        border: 1px solid #f1f1f1;
+        backdrop-filter: blur(10px);
+    }
+
+    .right-panel {
+        background: #fff;
+    }
+
+    footer {
+        display: none;
+    }
+
+    /* LEFT */
+
+    .left-panel {
+        background: linear-gradient(180deg, #07142f, #0f172a);
+        padding: 30px;
+        color: #fff;
+        position: relative;
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 15px;
+    }
+
+
+
+
+    .security-box {
+        margin-top: 25px;
+        width: 100%;
+    }
+
+    .location-circle {
+        width: 80px;
+        height: 80px;
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--gold);
+        margin: auto;
+        font-size: 30px;
+    }
+
+    .location-circle {
+        box-shadow:
+            0 0 15px rgba(212, 175, 55, .4),
+            0 0 35px rgba(212, 175, 55, .2);
+    }
+
+    .left-panel h2 {
+        font-size: 22px;
+        font-weight: 800;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .left-panel p {
+        text-align: center;
+        color: #cbd5e1;
+        font-size: 15px;
+        line-height: 1.7;
+        max-width: 240px;
+        margin: 0;
+    }
+
+    .gold-line {
+        width: 70px;
+        height: 3px;
+        background: var(--gold);
+        margin: 20px auto;
+    }
+
+    .location-image {
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 0;
+    }
+
+    .location-image img {
+        width: 250px;
+        filter: drop-shadow(0 8px 15px rgba(212, 175, 55, .25));
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+
+    .gold-line {
+        box-shadow: 0 0 10px rgba(212, 175, 55, .4);
+    }
+
+    .security-box {
+        margin-top: 40px;
+        border: 1px solid rgba(255, 255, 255, .12);
+        border-radius: 14px;
+        padding: 16px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .shield {
+        color: var(--gold);
+        font-size: 24px;
+    }
+
+    /* RIGHT */
+
+    .right-panel {
+        padding: 45px;
+    }
+
+    .right-panel h1 {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 2px;
+        letter-spacing: -1px;
+        color: #0f172a;
+    }
+
+    .subtitle {
+        font-size: 10px;
+        color: #64748b;
+    }
+
+    .gold-divider {
+        height: 3px;
+        background: var(--gold);
+        margin: 25px 0 35px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        width: 100%;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .address-container {
+        align-items: stretch;
+    }
+
+    .field {
+        flex: 1;
+        margin-bottom: 18px;
+    }
+
+    .field label {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #0f172a;
+
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        height: 48px;
+        padding: 0 10px;
+        font-size: 14px;
+        border: 1px solid #dbe3ec;
+        border-radius: 12px;
+    }
+
+    textarea {
+        height: 70px;
+        min-height: 120px;
+        font-size: 12px;
+    }
+
+    .check-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .check-card {
+        background: #fdfbf4;
+        border: 1px solid #f0e4b2;
+        border-radius: 10px;
+        min-height: 72px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 10px;
+        transition: .3s;
+    }
+
+    .check-card:hover {
+        background: #fff8df;
+        transform: translateY(-2px);
+    }
+
+    .button-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .save-btn {
+        flex: 1;
+        height: 52px;
+        background: #111827;
+        color: #d4af37;
+        border: none;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .cancel-btn {
+        flex: 1;
+        height: 52px;
+        margin-top: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        border: 1px solid #ddd;
+        color: black;
+        font-size: 15px;
+        text-decoration: none;
+    }
+
+    .check-card {
+        flex: 1;
+        min-height: 85px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .check-card i {
+        color: #d4af37;
+        font-size: 18px;
+    }
+
+
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #d4af37;
+        font-size: 14px;
+        z-index: 10;
+    }
+
+    .input-icon input,
+    .input-icon select,
+    .input-icon textarea {
+        padding-left: 45px !important;
+    }
+
+    .save-btn,
+    .cancel-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .location-circle {
+        margin-top: 15px;
+    }
+
+
+    .left-panel p {
+        margin-bottom: 0;
+    }
+
+    .gold-line {
+        margin: 14px auto;
+    }
+
+    .location-image {
+        margin-top: 5px;
+    }
+
+    .features-box {
+        width: 100%;
+        margin-top: 18px;
+        margin-bottom: 18px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #e2e8f0;
+        font-size: 13px;
+        margin-bottom: 12px;
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 255, 255, .08);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .03);
+    }
+
+    .feature-item i {
+        color: #d4af37;
+        font-size: 15px;
+    }
+
+
+
+    /* === ADD THIS ENTIRE BLOCK TO YOUR EXISTING <style> === */
+
+/* Tablet and Small Desktop (991px and below) */
+@media (max-width: 991px) {
+    .address-container {
+        grid-template-columns: 1fr; /* Stack panels vertically */
+        width: 96%;
+        margin: 15px auto;
+        border-radius: 28px;
+    }
+
+    /* Left Panel - Top Section */
+    .left-panel {
+        padding: 25px 20px;
+        text-align: center;
+        border-radius: 28px 28px 0 0;
+    }
+
+    .left-panel p {
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .features-box {
+        max-width: 350px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .location-image img {
+        width: 180px;
+    }
+
+    /* Right Panel */
+    .right-panel {
+        padding: 30px 24px;
+    }
+
+    .right-panel h1 {
+        font-size: 28px;
+    }
+
+    /* Form layout becomes single column */
+    .form-row {
+        grid-template-columns: 1fr; /* Stack fields */
+        gap: 0;
+    }
+
+    /* Re-adjust checkboxes row */
+    .check-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 25px 0 10px;
+    }
+
+    .check-card {
+        flex: 1;
+        min-width: 140px;
+        padding: 12px 8px;
+    }
+
+    .button-row {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .save-btn, .cancel-btn {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+/* Large Mobile Devices (768px and below) */
+@media (max-width: 768px) {
+    .address-container {
+        width: 95%;
+        border-radius: 24px;
+    }
+
+    .right-panel {
+        padding: 25px 20px;
+    }
+
+    .right-panel h1 {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .gold-divider {
+        margin: 20px 0 25px;
+    }
+
+    .field label {
+        font-size: 13px;
+    }
+
+    input, select, textarea {
+        height: 45px;
+        font-size: 13px;
+    }
+
+    .check-row {
+        flex-direction: column; /* Stack check cards */
+        gap: 10px;
+    }
+
+    .check-card {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 15px;
+        padding: 12px 16px;
+        min-height: auto;
+    }
+
+    .check-card i {
+        font-size: 16px;
+    }
+
+    .check-card span {
+        font-size: 13px;
+    }
+}
+
+/* Small Mobile Devices (576px and below) */
+@media (max-width: 576px) {
+    .address-container {
+        width: 92%;
+        margin: 10px auto;
+        border-radius: 20px;
+    }
+
+    .left-panel {
+        padding: 20px 15px;
+    }
+
+    .location-circle {
+        width: 65px;
+        height: 65px;
+        font-size: 24px;
+    }
+
+    .left-panel h2 {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+
+    .left-panel p {
+        max-width: 95%;
+        font-size: 13px;
+    }
+
+    .feature-item {
+        padding: 8px 12px;
+        font-size: 12px;
+        gap: 10px;
+    }
+
+    .feature-item i {
+        font-size: 14px;
+    }
+
+    .location-image img {
+        width: 150px;
+    }
+
+    .security-box {
+        padding: 12px;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .security-box h4 {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .security-box p {
+        font-size: 11px;
+        text-align: left;
+    }
+
+    /* Right Panel */
+    .right-panel {
+        padding: 20px 16px;
+    }
+
+    .right-panel h1 {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    .gold-divider {
+        margin: 15px 0 20px;
+    }
+
+    .field {
+        margin-bottom: 14px;
+    }
+
+    .field label {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+        height: 42px;
+        font-size: 12px;
+        padding: 0 12px;
+        border-radius: 10px;
+    }
+
+    .input-icon i {
+        font-size: 13px;
+        left: 12px;
+    }
+
+    .input-icon input,
+    .input-icon select,
+    .input-icon textarea {
+        padding-left: 38px !important;
+    }
+
+    textarea {
+        min-height: 80px;
+        padding-top: 10px;
+    }
+
+    .check-card {
+        padding: 10px 14px;
+    }
+
+    .check-card i {
+        font-size: 15px;
+    }
+
+    .check-card span {
+        font-size: 12px;
+    }
+
+    .save-btn, .cancel-btn {
+        height: 46px;
+        font-size: 14px;
+    }
+
+    .cancel-btn {
+        text-decoration: none;
+    }
+}
+
+/* Extra Small Devices (400px and below) */
+@media (max-width: 400px) {
+    .address-container {
+        width: 100%;
+        border-radius: 0;
+        margin: 0;
+    }
+
+    .left-panel {
+        border-radius: 0;
+        padding: 18px 12px;
+    }
+
+    .right-panel {
+        padding: 18px 14px;
+    }
+
+    .right-panel h1 {
+        font-size: 20px;
+    }
+
+    .field {
+        margin-bottom: 12px;
+    }
+
+    input, select {
+        height: 40px;
+    }
+
+    .check-card {
+        padding: 8px 12px;
+    }
+
+    .save-btn, .cancel-btn {
+        height: 44px;
+        font-size: 13px;
+    }
+
+    .button-row {
+        gap: 8px;
+    }
+}
+
+/* Landscape Mode for Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .address-container {
+        grid-template-columns: 1fr;
+    }
+
+    .left-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .location-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .left-panel h2 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .gold-line {
+        margin: 0 auto;
+        width: 40px;
+    }
+
+    .left-panel p {
+        max-width: 100%;
+        font-size: 12px;
+    }
+
+    .features-box {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .feature-item {
+        padding: 5px 10px;
+        margin-bottom: 8px;
+    }
+
+    .location-image {
+        display: none;
+    }
+
+    .security-box {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .right-panel {
+        padding: 20px;
+    }
+
+    .form-row {
+        gap: 10px;
+    }
+}
+
+/* Fix for very large screens (4K and above) */
+@media (min-width: 1600px) {
+    .address-container {
+        max-width: 1400px;
+        margin: 30px auto;
+    }
+
+    .left-panel {
+        padding: 45px 35px;
+    }
+
+    .right-panel {
+        padding: 55px;
+    }
+
+    .right-panel h1 {
+        font-size: 38px;
+    }
+
+    input, select, textarea {
+        height: 52px;
+        font-size: 15px;
+    }
+
+    .check-card {
+        min-height: 95px;
+        font-size: 14px;
+    }
+
+    .save-btn, .cancel-btn {
+        height: 56px;
+        font-size: 16px;
+    }
+}
+</style>
+
 {% endblock %}
