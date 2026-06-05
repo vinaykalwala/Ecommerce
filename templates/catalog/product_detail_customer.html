@@ -1,0 +1,643 @@
+
+{% load static %}
+
+{% block title %}{{ product.name }} - {{ product.category.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Product Detail Styles */
+    .breadcrumb-custom {
+        background: transparent;
+        padding: 20px 0;
+        margin-bottom: 30px;
+    }
+    
+    .product-gallery {
+        position: sticky;
+        top: 20px;
+    }
+    
+    .main-image {
+        width: 100%;
+        height: 500px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #f8fafc;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .thumbnail-list {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+    }
+    
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+    }
+    
+    .thumbnail.active {
+        border-color: #667eea;
+    }
+    
+    .thumbnail:hover {
+        transform: scale(1.05);
+    }
+    
+    .product-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 15px;
+    }
+    
+    .product-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .stars {
+        color: #fbbf24;
+    }
+    
+    .product-price {
+        margin-bottom: 20px;
+    }
+    
+    .current-price {
+        font-size: 36px;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .old-price {
+        font-size: 20px;
+        color: #a0aec0;
+        text-decoration: line-through;
+        margin-left: 10px;
+    }
+    
+    .sale-badge-large {
+        background: #e53e3e;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        margin-left: 10px;
+        display: inline-block;
+    }
+    
+    .product-description {
+        color: #4a5568;
+        line-height: 1.8;
+        margin-bottom: 30px;
+    }
+    
+    .variant-selector {
+        margin-bottom: 25px;
+    }
+    
+    .variant-label {
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .variant-options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .variant-option {
+        padding: 8px 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .variant-option:hover {
+        border-color: #667eea;
+    }
+    
+    .variant-option.selected {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .quantity-btn:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .quantity-input {
+        width: 80px;
+        text-align: center;
+        padding: 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+    }
+    
+    .btn-buy-now {
+        background: #48bb78;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-right: 10px;
+        transition: all 0.2s;
+    }
+    
+    .btn-buy-now:hover {
+        background: #38a169;
+        transform: translateY(-2px);
+    }
+    
+    .btn-add-cart-large {
+        background: #667eea;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    
+    .btn-add-cart-large:hover {
+        background: #5a67d8;
+        transform: translateY(-2px);
+    }
+    
+    .attributes-table {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    
+    .attributes-table td {
+        padding: 10px 0;
+        border-bottom: 1px solid #edf2f7;
+    }
+    
+    .attributes-table .label {
+        font-weight: 600;
+        color: #4a5568;
+        width: 150px;
+    }
+    
+    .related-products {
+        margin-top: 60px;
+    }
+    
+    .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #667eea;
+    }
+    
+    @media (max-width: 768px) {
+        .main-image {
+            height: 300px;
+        }
+        
+        .product-title {
+            font-size: 24px;
+        }
+        
+        .current-price {
+            font-size: 28px;
+        }
+        
+        .btn-buy-now, .btn-add-cart-large {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<div class="container">
+    <nav class="breadcrumb-custom">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'catalog:shop' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalog:shop' %}?category={{ product.category.slug }}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ product.name|truncatechars:50 }}</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Product Gallery -->
+        <div class="col-md-6">
+            <div class="product-gallery">
+                <img id="main-product-image" src="{% if main_image %}{{ main_image.image.url }}{% else %}{% static 'images/placeholder.jpg' %}{% endif %}" 
+                     class="main-image" alt="{{ product.name }}">
+                
+                {% if images %}
+                <div class="thumbnail-list">
+                    {% for image in images %}
+                    <img src="{{ image.image.url }}" class="thumbnail" 
+                         onclick="changeMainImage('{{ image.image.url }}', this)"
+                         alt="{{ image.alt_text }}">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <span class="product-category text-primary">{{ product.category.name }}</span>
+            <h1 class="product-title">{{ product.name }}</h1>
+            
+            <div class="product-rating">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span class="text-muted">(4.5 • 128 reviews)</span>
+            </div>
+            
+            <div class="product-price">
+                <span class="current-price" id="product-price">
+                    ${{ min_price|floatformat:2 }}
+                </span>
+                {% if has_sale %}
+                    <span class="old-price" id="old-price">
+                        ${{ product.variants.first.price|floatformat:2 }}
+                    </span>
+                    <span class="sale-badge-large">Sale!</span>
+                {% endif %}
+            </div>
+            
+            <div class="product-description">
+                {{ product.description|truncatewords:50 }}
+                <a href="#description" class="text-primary">Read more</a>
+            </div>
+            
+            <!-- Variant Selector -->
+            {% if variants.count > 1 %}
+            <div class="variant-selector">
+                <label class="variant-label">Select Variant:</label>
+                <div class="variant-options" id="variant-options">
+                    {% for variant in variants %}
+                    <div class="variant-option" data-variant-id="{{ variant.id }}" 
+                         data-price="{{ variant.final_price }}"
+                         data-old-price="{{ variant.price }}"
+                         data-stock="{{ variant.current_stock }}"
+                         onclick="selectVariant(this)">
+                        {{ variant.sku }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Stock Status -->
+            <div class="mb-3" id="stock-status">
+                {% with first_variant=variants.first %}
+                    {% if first_variant.in_stock %}
+                        <span class="text-success">
+                            <i class="fas fa-check-circle"></i> In Stock ({{ first_variant.current_stock }} available)
+                        </span>
+                    {% elif first_variant.current_stock > 0 %}
+                        <span class="text-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Low Stock (Only {{ first_variant.current_stock }} left)
+                        </span>
+                    {% else %}
+                        <span class="text-danger">
+                            <i class="fas fa-times-circle"></i> Out of Stock
+                        </span>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            
+            <!-- Quantity Selector -->
+            <div class="quantity-selector">
+                <button class="quantity-btn" onclick="decrementQuantity()">-</button>
+                <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="99">
+                <button class="quantity-btn" onclick="incrementQuantity()">+</button>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="mb-4">
+                <button class="btn-buy-now" onclick="buyNow()">
+                    <i class="fas fa-bolt"></i> Buy Now
+                </button>
+                <button class="btn-add-cart-large" onclick="addToCart()">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                </button>
+            </div>
+            
+            <!-- Product Meta -->
+            <div class="border-top pt-3">
+                <small class="text-muted d-block mb-1">
+                    <i class="fas fa-tag"></i> SKU: {{ variants.first.sku|default:"N/A" }}
+                </small>
+                {% if product.brand %}
+                <small class="text-muted d-block">
+                    <i class="fas fa-building"></i> Brand: {{ product.brand.name }}
+                </small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Details Tabs -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description" type="button">
+                        Description
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specifications" type="button">
+                        Specifications
+                    </button>
+                </li>
+                {% if variants.count > 1 %}
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#variants-info" type="button">
+                        Variants
+                    </button>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews" type="button">
+                        Reviews
+                    </button>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-4">
+                <!-- Description Tab -->
+                <div class="tab-pane fade show active" id="description">
+                    <div class="card">
+                        <div class="card-body">
+                            {{ product.description|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Specifications Tab -->
+                <div class="tab-pane fade" id="specifications">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="attributes-table">
+                                {% for attribute in attributes %}
+                                <tr>
+                                    <td class="label">{{ attribute.name }}:</td>
+                                    <td>
+                                        {% if attribute.data_type == 'boolean' %}
+                                            {% if attribute.value == 'True' or attribute.value == 'true' %}
+                                                <span class="text-success">Yes</span>
+                                            {% else %}
+                                                <span class="text-danger">No</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {{ attribute.value }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">No specifications available.</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Variants Tab -->
+                {% if variants.count > 1 %}
+                <div class="tab-pane fade" id="variants-info">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>SKU</th>
+                                            <th>Price</th>
+                                            <th>Sale Price</th>
+                                            <th>Stock</th>
+                                            <th>Status</th>
+                                        </thead>
+                                    </thead>
+                                    <tbody>
+                                        {% for variant in variants %}
+                                        <tr>
+                                            <td><code>{{ variant.sku }}</code></td>
+                                            <td>${{ variant.price|floatformat:2 }}</td>
+                                            <td>
+                                                {% if variant.sale_price %}
+                                                    ${{ variant.sale_price|floatformat:2 }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ variant.current_stock }}</td>
+                                            <td>
+                                                {% if variant.is_active and variant.in_stock %}
+                                                    <span class="badge bg-success">Available</span>
+                                                {% elif not variant.is_active %}
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Out of Stock</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Reviews Tab -->
+                <div class="tab-pane fade" id="reviews">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center py-4">
+                                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                                <h5>Customer Reviews</h5>
+                                <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+                                <button class="btn btn-primary">Write a Review</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="related-products">
+        <h3 class="section-title">You May Also Like</h3>
+        <div class="row">
+            {% for related in related_products %}
+            <div class="col-md-3 col-sm-6">
+                <div class="product-card">
+                    <a href="{% url 'catalog:product_detail_customer' related.pk related.slug %}">
+                        {% if related.main_image %}
+                            <img src="{{ related.main_image.image.url }}" class="product-image" alt="{{ related.name }}" style="height: 200px;">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.jpg' %}" class="product-image" alt="{{ related.name }}" style="height: 200px;">
+                        {% endif %}
+                    </a>
+                    <div class="product-info">
+                        <a href="{% url 'catalog:product_detail_customer' related.pk related.slug %}" class="product-title">
+                            {{ related.name|truncatechars:30 }}
+                        </a>
+                        <div class="product-price">
+                            ${{ related.variants.first.final_price|floatformat:2 }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Change main image in gallery
+    function changeMainImage(imageUrl, element) {
+        document.getElementById('main-product-image').src = imageUrl;
+        
+        // Remove active class from all thumbnails
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.classList.remove('active');
+        });
+        
+        // Add active class to clicked thumbnail
+        element.classList.add('active');
+    }
+    
+    // Select variant
+    function selectVariant(element) {
+        // Remove selected class from all variants
+        document.querySelectorAll('.variant-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked variant
+        element.classList.add('selected');
+        
+        // Update price
+        const price = element.dataset.price;
+        const oldPrice = element.dataset.oldPrice;
+        const stock = element.dataset.stock;
+        
+        document.getElementById('product-price').textContent = '$' + parseFloat(price).toFixed(2);
+        
+        if (oldPrice && oldPrice > price) {
+            document.getElementById('old-price').textContent = '$' + parseFloat(oldPrice).toFixed(2);
+        }
+        
+        // Update stock status
+        const stockStatus = document.getElementById('stock-status');
+        if (stock > 0) {
+            stockStatus.innerHTML = '<span class="text-success"><i class="fas fa-check-circle"></i> In Stock (' + stock + ' available)</span>';
+        } else {
+            stockStatus.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle"></i> Out of Stock</span>';
+        }
+    }
+    
+    // Quantity controls
+    function incrementQuantity() {
+        const quantityInput = document.getElementById('quantity');
+        let value = parseInt(quantityInput.value);
+        value = isNaN(value) ? 1 : value;
+        quantityInput.value = Math.min(value + 1, 99);
+    }
+    
+    function decrementQuantity() {
+        const quantityInput = document.getElementById('quantity');
+        let value = parseInt(quantityInput.value);
+        value = isNaN(value) ? 1 : value;
+        quantityInput.value = Math.max(value - 1, 1);
+    }
+    
+    // Cart functions
+    function addToCart() {
+        const quantity = document.getElementById('quantity').value;
+        const selectedVariant = document.querySelector('.variant-option.selected');
+        const variantId = selectedVariant ? selectedVariant.dataset.variantId : null;
+        
+        alert(`Added ${quantity} item(s) to cart!`);
+        // Implement actual cart logic here
+    }
+    
+    function buyNow() {
+        addToCart();
+        window.location.href = '/checkout/';
+    }
+    
+    // Set default selected variant
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstVariant = document.querySelector('.variant-option');
+        if (firstVariant) {
+            firstVariant.classList.add('selected');
+        }
+        
+        const firstThumbnail = document.querySelector('.thumbnail');
+        if (firstThumbnail) {
+            firstThumbnail.classList.add('active');
+        }
+    });
+</script>
+{% endblock %}

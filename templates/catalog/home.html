@@ -1,52 +1,42 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
+
+{% block title %}Home{% endblock %}
 
 {% block content %}
 
-<div class="text-center mt-5">
-    <h1>Welcome to E-Shop</h1>
-    <p class="lead">Your one-stop destination for all your shopping needs</p>
-    
-    {% if not user.is_authenticated %}
-        <div class="mt-4">
-            <a href="{% url 'customer_signup' %}" class="btn btn-primary btn-lg">Sign Up</a>
-            <a href="{% url 'login' %}" class="btn btn-secondary btn-lg">Login</a>
-        </div>
-    {% else %}
-        <div class="mt-4">
-            <a href="{% url 'profile' %}" class="btn btn-primary btn-lg">Go to Profile</a>
-        </div>
-    {% endif %}
-</div>
+<!-- Hero Section -->
 
-<div class="row mt-5">
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-truck fa-3x text-primary mb-3"></i>
-                <h5>Free Shipping</h5>
-                <p class="text-muted">On orders over $50</p>
-            </div>
+<section class="bg-light py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+
+```
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold">
+                Discover Amazing Products
+            </h1>
+
+            <p class="lead text-muted">
+                Shop from thousands of products across multiple categories.
+            </p>
+
+            
         </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-undo-alt fa-3x text-primary mb-3"></i>
-                <h5>30 Days Return</h5>
-                <p class="text-muted">Money back guarantee</p>
-            </div>
+
+        <div class="col-lg-6 text-center">
+            <img src="{% static 'images/hero.png' %}"
+                 class="img-fluid"
+                 alt="Hero">
         </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <div class="card-body text-center">
-                <i class="fas fa-headset fa-3x text-primary mb-3"></i>
-                <h5>24/7 Support</h5>
-                <p class="text-muted">Customer service</p>
-            </div>
-        </div>
+
     </div>
 </div>
+```
+
+</section>
+
+
+
 
 {% endblock %}

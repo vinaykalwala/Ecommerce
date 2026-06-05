@@ -1,0 +1,191 @@
+{% extends 'catalog/admin/base_admin.html' %}
+
+{% block title %}Inventory List{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Inventory Management</h1>
+    <div>
+        <a href="{% url 'inventory:export_inventory_csv' %}" class="btn btn-success">
+            <i class="fas fa-download"></i> Export CSV
+        </a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bulkUpdateModal">
+            <i class="fas fa-edit"></i> Bulk Update
+        </button>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" class="row">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search by SKU or Product" value="{{ search_query }}">
+            </div>
+            <div class="col-md-2">
+                <select name="stock_status" class="form-select">
+                    <option value="">All Stock Status</option>
+                    <option value="in_stock" {% if stock_status == 'in_stock' %}selected{% endif %}>In Stock</option>
+                    <option value="low_stock" {% if stock_status == 'low_stock' %}selected{% endif %}>Low Stock</option>
+                    <option value="out_of_stock" {% if stock_status == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category == category.id %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="sort" class="form-select">
+                    {% for key, label in sort_options.items %}
+                        <option value="{{ key }}" {% if sort_by == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a href="{% url 'inventory:inventory_list' %}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Inventory Table -->
+<form method="post" action="{% url 'inventory:bulk_inventory_update' %}">
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>SKU</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Sale Price</th>
+                            <th>Current Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for variant in variants %}
+                        <tr>
+                            <td><input type="checkbox" name="variant_ids" value="{{ variant.id }}" class="variant-checkbox"></td>
+                            <td><strong>{{ variant.sku }}</strong></td>
+                            <td>{{ variant.product.name }}</td>
+                            <td>{{ variant.product.category.name }}</td>
+                            <td>${{ variant.price }}</td>
+                            <td>{% if variant.sale_price %}${{ variant.sale_price }}{% else %}-{% endif %}</td>
+                            <td>
+                                <span class="badge {% if variant.current_stock == 0 %}bg-danger{% elif variant.current_stock <= 10 %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ variant.current_stock }}
+                                </span>
+                            </td>
+                            <td>{{ variant.stock_status }}</td>
+                            <td>
+                                <a href="{% url 'inventory:inventory_detail' variant.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'inventory:inventory_adjust' variant.id %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center">No inventory items found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if variants.has_other_pages %}
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {% if variants.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ variants.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if stock_status %}&stock_status={{ stock_status }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    Previous
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in variants.paginator.page_range %}
+                            <li class="page-item {% if variants.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if stock_status %}&stock_status={{ stock_status }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    {{ num }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        
+                        {% if variants.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ variants.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if stock_status %}&stock_status={{ stock_status }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">
+                                    Next
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</form>
+
+<!-- Bulk Update Modal -->
+<div class="modal fade" id="bulkUpdateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Bulk Update Inventory</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'inventory:bulk_inventory_update' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Action</label>
+                        <select name="action" class="form-select" required>
+                            <option value="add">Add Stock</option>
+                            <option value="remove">Remove Stock</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" required min="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Remarks</label>
+                        <textarea name="remarks" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Selected variants will be updated.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Selected</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Select all checkboxes
+    document.getElementById('selectAll').addEventListener('change', function() {
+        var checkboxes = document.getElementsByClassName('variant-checkbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+    });
+</script>
+{% endblock %}

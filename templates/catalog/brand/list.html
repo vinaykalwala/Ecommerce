@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Brands - Catalog Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Brands</h1>
+        <a href="{% url 'catalog:brand_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Brand
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search brands..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    {% if search_query %}
+                        <a href="{% url 'catalog:brand_list' %}" class="btn btn-secondary">Clear</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Brands Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Name</th>
+                            <th>Slug</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for brand in page_obj %}
+                        <tr>
+                            <td>
+                                {% if brand.logo %}
+                                    <img src="{{ brand.logo.url }}" alt="{{ brand.name }}" style="height: 40px;">
+                                {% else %}
+                                    <div class="text-muted">No logo</div>
+                                {% endif %}
+                            </td>
+                            <td>{{ brand.name }}</td>
+                            <td><code>{{ brand.slug }}</code></td>
+                            <td>
+                                {% if brand.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ brand.created_at|date:"Y-m-d" }}</td>
+                            <td>
+                                <a href="{% url 'catalog:brand_update' brand.pk %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-delete-url="{% url 'catalog:brand_delete' brand.pk %}" data-item-name="{{ brand.name }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">No brands found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% include 'catalog/partials/pagination.html' with page_obj=page_obj %}
+        </div>
+    </div>
+</div>
+
+{% include 'catalog/partials/delete_modal.html' %}
+{% endblock %}

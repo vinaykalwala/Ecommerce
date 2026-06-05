@@ -1,0 +1,913 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Product Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Modern Product Detail Styles */
+    .product-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .product-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .product-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+    
+    .product-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.2);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+    
+    /* Tab Styling */
+    .nav-tabs {
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 25px;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: #64748b;
+        font-weight: 600;
+        padding: 12px 24px;
+        position: relative;
+        transition: all 0.3s;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        color: #667eea;
+        background: transparent;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: #667eea;
+        background: transparent;
+    }
+    
+    .nav-tabs .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #667eea;
+    }
+    
+    /* Info Cards */
+    .info-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+    
+    .info-card-header {
+        background: #f8fafc;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    
+    .info-card-body {
+        padding: 20px;
+    }
+    
+    /* Attribute Table */
+    .attribute-table {
+        margin-bottom: 0;
+    }
+    
+    .attribute-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .attribute-label {
+        font-weight: 600;
+        color: #475569;
+        width: 200px;
+        background: #f8fafc;
+    }
+    
+    /* Image Gallery */
+    .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .gallery-item {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+    
+    .gallery-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .gallery-info {
+        padding: 12px;
+        background: white;
+    }
+    
+    .primary-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    
+    /* Variant Cards */
+    .variant-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+    }
+    
+    .variant-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        transition: all 0.3s;
+        position: relative;
+    }
+    
+    .variant-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    }
+    
+    .variant-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .variant-sku {
+        font-family: monospace;
+        font-size: 14px;
+        background: rgba(255,255,255,0.2);
+        padding: 4px 8px;
+        border-radius: 6px;
+    }
+    
+    .variant-body {
+        padding: 20px;
+    }
+    
+    .variant-price {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .current-price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2d3748;
+    }
+    
+    .old-price {
+        font-size: 16px;
+        color: #a0aec0;
+        text-decoration: line-through;
+    }
+    
+    .sale-price {
+        color: #e53e3e;
+        font-weight: 600;
+    }
+    
+    .stock-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .stock-in {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+    
+    .stock-low {
+        background: #feebc8;
+        color: #7c2d12;
+    }
+    
+    .stock-out {
+        background: #fed7d7;
+        color: #742a2a;
+    }
+    
+    .variant-attributes {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 15px 0;
+    }
+    
+    .variant-attribute-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        font-size: 13px;
+    }
+    
+    .variant-images-preview {
+        display: flex;
+        gap: 8px;
+        margin-top: 15px;
+    }
+    
+    .variant-thumb {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .variant-thumb:hover {
+        transform: scale(1.05);
+    }
+    
+    .variant-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+    }
+    
+    /* Quick Stats */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .quick-stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .quick-stat-number {
+        font-size: 28px;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .quick-stat-label {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 5px;
+    }
+    
+    /* Main Image Display */
+    .main-image-container {
+        position: relative;
+        background: #f8fafc;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    .main-image {
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+        padding: 20px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .product-header {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 1.5rem;
+        }
+        
+        .variant-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Badge Styles */
+    .badge-status {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .badge-active {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+    
+    .badge-draft {
+        background: #feebc8;
+        color: #7c2d12;
+    }
+    
+    .badge-inactive {
+        background: #fed7d7;
+        color: #742a2a;
+    }
+    
+    .badge-featured {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    /* Modal Styles */
+    .image-modal-img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Product Header -->
+    <div class="product-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge-status badge-{{ product.status }}">
+                        {% if product.status == 'active' %}
+                            <i class="fas fa-check-circle me-1"></i>Active
+                        {% elif product.status == 'draft' %}
+                            <i class="fas fa-edit me-1"></i>Draft
+                        {% else %}
+                            <i class="fas fa-ban me-1"></i>Inactive
+                        {% endif %}
+                    </span>
+                    {% if product.is_featured %}
+                        <span class="badge-status badge-featured">
+                            <i class="fas fa-star me-1"></i>Featured
+                        </span>
+                    {% endif %}
+                </div>
+                <h1 class="product-title">{{ product.name }}</h1>
+                <div class="product-meta">
+                    <div class="product-meta-item">
+                        <i class="fas fa-folder"></i>
+                        {{ product.category.name }}
+                    </div>
+                    {% if product.brand %}
+                    <div class="product-meta-item">
+                        <i class="fas fa-tag"></i>
+                        {{ product.brand.name }}
+                    </div>
+                    {% endif %}
+                    <div class="product-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        Created: {{ product.created_at|date:"M d, Y" }}
+                    </div>
+                    <div class="product-meta-item">
+                        <i class="fas fa-code-branch"></i>
+                        {{ product.variants.count }} Variants
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-light">
+                    <i class="fas fa-edit me-2"></i>Edit Product
+                </a>
+                <a href="{% url 'catalog:variant_create' product.pk %}" class="btn btn-outline-light">
+                    <i class="fas fa-plus me-2"></i>Add Variant
+                </a>
+                <a href="{% url 'catalog:product_list' %}" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+        <div class="quick-stat-card">
+            <div class="quick-stat-number">{{ product.variants.count }}</div>
+            <div class="quick-stat-label">Total Variants</div>
+        </div>
+        <div class="quick-stat-card">
+            <div class="quick-stat-number">{{ product.variants.filter.is_active.count }}</div>
+            <div class="quick-stat-label">Active Variants</div>
+        </div>
+        <div class="quick-stat-card">
+            <div class="quick-stat-number">{{ product.images.count }}</div>
+            <div class="quick-stat-label">Product Images</div>
+        </div>
+        <div class="quick-stat-card">
+            <div class="quick-stat-number">{{ product.attributes.count }}</div>
+            <div class="quick-stat-label">Attributes</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">
+                <i class="fas fa-info-circle me-2"></i>General Information
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#attributes" type="button" role="tab">
+                <i class="fas fa-list me-2"></i>Attributes
+                {% if product.attributes.count %}
+                    <span class="badge bg-secondary ms-1">{{ product.attributes.count }}</span>
+                {% endif %}
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab">
+                <i class="fas fa-images me-2"></i>Images
+                {% if product.images.count %}
+                    <span class="badge bg-secondary ms-1">{{ product.images.count }}</span>
+                {% endif %}
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#variants" type="button" role="tab">
+                <i class="fas fa-code-branch me-2"></i>Variants
+                {% if product.variants.count %}
+                    <span class="badge bg-secondary ms-1">{{ product.variants.count }}</span>
+                {% endif %}
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- General Tab -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-file-alt me-2"></i>Product Details
+                        </div>
+                        <div class="info-card-body">
+                            <table class="table attribute-table">
+                                <tr>
+                                    <td class="attribute-label">Product Name:</td>
+                                    <td><strong>{{ product.name }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Slug:</td>
+                                    <td><code>{{ product.slug }}</code></td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Category:</td>
+                                    <td>
+                                        <a href="{% url 'catalog:category_update' product.category.pk %}" class="text-decoration-none">
+                                            {{ product.category.name }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Brand:</td>
+                                    <td>
+                                        {% if product.brand %}
+                                            <a href="{% url 'catalog:brand_update' product.brand.pk %}" class="text-decoration-none">
+                                                {{ product.brand.name }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">No brand assigned</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Status:</td>
+                                    <td>
+                                        <span class="badge-status badge-{{ product.status }}">
+                                            {{ product.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Featured:</td>
+                                    <td>
+                                        {% if product.is_featured %}
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Yes</span>
+                                        {% else %}
+                                            <span class="text-muted"><i class="fas fa-times-circle"></i> No</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Description:</td>
+                                    <td>{{ product.description|linebreaks }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Created:</td>
+                                    <td>{{ product.created_at|date:"F d, Y H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="attribute-label">Last Updated:</td>
+                                    <td>{{ product.updated_at|date:"F d, Y H:i" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-image me-2"></i>Main Image
+                        </div>
+                        <div class="info-card-body text-center">
+                            {% if product.main_image %}
+                                <div class="main-image-container">
+                                    <img src="{{ product.main_image.image.url }}" alt="{{ product.name }}" class="main-image">
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        {% if product.main_image.alt_text %}
+                                            {{ product.main_image.alt_text }}
+                                        {% else %}
+                                            No alt text
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            {% else %}
+                                <div class="text-muted py-5">
+                                    <i class="fas fa-image fa-4x mb-3 d-block"></i>
+                                    <p>No main image set</p>
+                                    <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-sm btn-primary">
+                                        Add Image
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attributes Tab -->
+        <div class="tab-pane fade" id="attributes" role="tabpanel">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <i class="fas fa-tags me-2"></i>Product Attributes
+                </div>
+                <div class="info-card-body">
+                    {% if product.attributes.all %}
+                        <div class="table-responsive">
+                            <table class="table attribute-table">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Attribute</th>
+                                        <th>Value</th>
+                                        <th>Data Type</th>
+                                        <th>Added On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attribute in product.attributes.all %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ attribute.attribute.name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ attribute.attribute.slug }}</small>
+                                        </td>
+                                        <td>
+                                            {% if attribute.attribute.data_type == 'boolean' %}
+                                                {% if attribute.value|lower == 'true' or attribute.value == '1' %}
+                                                    <span class="badge bg-success"><i class="fas fa-check"></i> Yes</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger"><i class="fas fa-times"></i> No</span>
+                                                {% endif %}
+                                            {% elif attribute.attribute.data_type == 'number' %}
+                                                <span class="badge bg-info">{{ attribute.value }}</span>
+                                            {% else %}
+                                                {{ attribute.value }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                {% if attribute.attribute.data_type == 'text' %}
+                                                    <i class="fas fa-font"></i> Text
+                                                {% elif attribute.attribute.data_type == 'number' %}
+                                                    <i class="fas fa-hashtag"></i> Number
+                                                {% else %}
+                                                    <i class="fas fa-toggle-on"></i> Boolean
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td class="text-muted small">
+                                            {{ attribute.created_at|date:"M d, Y" }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-tags fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">No attributes assigned to this product yet.</p>
+                            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary btn-sm">
+                                Add Attributes
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Images Tab -->
+        <div class="tab-pane fade" id="images" role="tabpanel">
+            <div class="info-card">
+                <div class="info-card-header">
+                    <i class="fas fa-images me-2"></i>Product Image Gallery
+                </div>
+                <div class="info-card-body">
+                    {% if product.images.all %}
+                        <div class="image-gallery">
+                            {% for image in product.images.all %}
+                            <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#imageModal{{ image.pk }}">
+                                <div style="position: relative;">
+                                    <img src="{{ image.image.url }}" class="gallery-image" alt="{{ image.alt_text }}">
+                                    {% if image.is_primary %}
+                                        <div class="primary-badge">
+                                            <i class="fas fa-star"></i> Primary
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="gallery-info">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">
+                                                <i class="fas fa-sort-numeric-down"></i> Order: {{ image.sort_order }}
+                                            </small>
+                                            <br>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar"></i> {{ image.created_at|date:"M d, Y" }}
+                                            </small>
+                                        </div>
+                                        {% if not image.is_primary %}
+                                            <form method="post" action="{% url 'catalog:product_update' product.pk %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="set_primary" value="{{ image.pk }}">
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-star"></i> Set Primary
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                    {% if image.alt_text %}
+                                        <p class="mt-2 mb-0 small text-muted">
+                                            <i class="fas fa-comment"></i> {{ image.alt_text }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Image Modal -->
+                            <div class="modal fade" id="imageModal{{ image.pk }}" tabindex="-1">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Product Image</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="{{ image.image.url }}" class="image-modal-img" alt="{{ image.alt_text }}">
+                                            {% if image.alt_text %}
+                                                <p class="mt-3 text-muted">{{ image.alt_text }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-images fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">No images uploaded for this product yet.</p>
+                            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-upload"></i> Upload Images
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Variants Tab -->
+        <div class="tab-pane fade" id="variants" role="tabpanel">
+            {% if product.variants.all %}
+                <div class="variant-grid">
+                    {% for variant in product.variants.all %}
+                    <div class="variant-card">
+                        <div class="variant-header">
+                            <div>
+                                <i class="fas fa-code-branch me-2"></i>
+                                <span class="variant-sku">{{ variant.sku }}</span>
+                            </div>
+                            <div>
+                                {% if variant.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="variant-body">
+                            <div class="variant-price">
+                                <div class="current-price">${{ variant.price }}</div>
+                                {% if variant.sale_price %}
+                                    <div class="old-price">${{ variant.price }}</div>
+                                    <div class="sale-price">Save ${{ variant.price|floatformat:2|add:variant.sale_price|floatformat:2 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Stock Status:</span>
+                                    <span class="stock-status 
+                                        {% if variant.current_stock > variant.low_stock_threshold %}stock-in
+                                        {% elif variant.current_stock > 0 %}stock-low
+                                        {% else %}stock-out{% endif %}">
+                                        <i class="fas 
+                                            {% if variant.current_stock > variant.low_stock_threshold %}fa-check-circle
+                                            {% elif variant.current_stock > 0 %}fa-exclamation-triangle
+                                            {% else %}fa-times-circle{% endif %}"></i>
+                                        {{ variant.stock_status }}
+                                    </span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    {% with stock_percentage=variant.current_stock|default:0|add:0 %}
+                                    <div class="progress-bar 
+                                        {% if variant.current_stock > variant.low_stock_threshold %}bg-success
+                                        {% elif variant.current_stock > 0 %}bg-warning
+                                        {% else %}bg-danger{% endif %}" 
+                                        style="width: {% if variant.low_stock_threshold > 0 %}{{ variant.current_stock|divisibleby:variant.low_stock_threshold }}{% else %}0{% endif %}%">
+                                    </div>
+                                    {% endwith %}
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small class="text-muted">Current: {{ variant.current_stock }} units</small>
+                                    <small class="text-muted">Low stock threshold: {{ variant.low_stock_threshold }}</small>
+                                </div>
+                            </div>
+                            
+                            {% if variant.attributes.all %}
+                                <div class="variant-attributes">
+                                    <strong class="d-block mb-2"><i class="fas fa-tags"></i> Variant Attributes:</strong>
+                                    {% for attr in variant.attributes.all %}
+                                        <div class="variant-attribute-item">
+                                            <span class="text-muted">{{ attr.attribute.name }}:</span>
+                                            <span class="fw-semibold">{{ attr.value }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            {% if variant.images.all %}
+                                <div class="variant-images-preview">
+                                    <strong class="d-block w-100 mb-2"><i class="fas fa-images"></i> Variant Images:</strong>
+                                    <div class="d-flex gap-2">
+                                        {% for img in variant.images.all|slice:":3" %}
+                                            <img src="{{ img.image.url }}" class="variant-thumb" alt="{{ img.alt_text }}" 
+                                                 data-bs-toggle="tooltip" title="{{ img.alt_text|default:'Variant image' }}">
+                                        {% endfor %}
+                                        {% if variant.images.count > 3 %}
+                                            <div class="variant-thumb bg-light d-flex align-items-center justify-content-center">
+                                                <small>+{{ variant.images.count|add:"-3" }}</small>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="variant-actions">
+                                <a href="{% url 'catalog:variant_update' product.pk variant.pk %}" class="btn btn-sm btn-warning flex-grow-1">
+                                    <i class="fas fa-edit"></i> Edit Variant
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#variantDeleteModal{{ variant.pk }}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Variant Delete Modal -->
+                    <div class="modal fade" id="variantDeleteModal{{ variant.pk }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="text-center">
+                                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                                        <p>Are you sure you want to delete variant <strong>"{{ variant.sku }}"</strong>?</p>
+                                        <p class="text-muted small">This action cannot be undone.</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <form method="post" action="{% url 'catalog:variant_delete' product.pk variant.pk %}">
+                                        {% csrf_token %}
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger">Delete Variant</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="info-card">
+                    <div class="info-card-body text-center py-5">
+                        <i class="fas fa-code-branch fa-4x text-muted mb-3"></i>
+                        <h5>No Variants Found</h5>
+                        <p class="text-muted">This product doesn't have any variants yet.</p>
+                        <a href="{% url 'catalog:variant_create' product.pk %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create First Variant
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Image gallery lightbox effect
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const modalId = this.getAttribute('data-bs-target');
+            const modal = new bootstrap.Modal(document.querySelector(modalId));
+            modal.show();
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

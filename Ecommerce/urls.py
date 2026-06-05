@@ -18,6 +18,7 @@ urlpatterns = [
     path("accounts/",include("accounts.urls")),
     path("accounts/login/",auth_views.LoginView.as_view(template_name="accounts/login.html"),name="login"),
     path("catalog/",include("catalog.urls")),
+    path('inventory/', include('inventory.urls')),
     path("cart/",include("cart.urls")),
     path("wishlist/",include("wishlist.urls")),
     path("coupons/",include("coupons.urls")),

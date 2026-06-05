@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3">{{ title }}</h1>
+            <p class="text-muted mb-0">Product: {{ product.name }}</p>
+        </div>
+        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Product
+        </a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Variant Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Variant Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ variant_form.sku.id_for_label }}" class="form-label">SKU *</label>
+                        {{ variant_form.sku }}
+                        {% if variant_form.sku.errors %}
+                            <div class="text-danger">{{ variant_form.sku.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ variant_form.price.id_for_label }}" class="form-label">Price *</label>
+                        {{ variant_form.price }}
+                        {% if variant_form.price.errors %}
+                            <div class="text-danger">{{ variant_form.price.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ variant_form.sale_price.id_for_label }}" class="form-label">Sale Price</label>
+                        {{ variant_form.sale_price }}
+                        {% if variant_form.sale_price.errors %}
+                            <div class="text-danger">{{ variant_form.sale_price.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ variant_form.current_stock.id_for_label }}" class="form-label">Current Stock</label>
+                        {{ variant_form.current_stock }}
+                        {% if variant_form.current_stock.errors %}
+                            <div class="text-danger">{{ variant_form.current_stock.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="{{ variant_form.low_stock_threshold.id_for_label }}" class="form-label">Low Stock Threshold</label>
+                        {{ variant_form.low_stock_threshold }}
+                        {% if variant_form.low_stock_threshold.errors %}
+                            <div class="text-danger">{{ variant_form.low_stock_threshold.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            {{ variant_form.is_active }}
+                            <label class="form-check-label" for="{{ variant_form.is_active.id_for_label }}">
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Variant Attributes Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Variant Attributes</h5>
+            </div>
+            <div class="card-body">
+                {{ attribute_formset.management_form }}
+                <div id="attributes-container" class="formset-container">
+                    {% for form in attribute_formset %}
+                        <div class="formset-row">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    {{ form.attribute }}
+                                </div>
+                                <div class="col-md-5">
+                                    {{ form.value }}
+                                </div>
+                                <div class="col-md-2">
+                                    {% if form.instance.pk %}
+                                        <label class="form-check-label">
+                                            {{ form.DELETE }} Delete
+                                        </label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" id="add-attribute">Add Attribute</button>
+            </div>
+        </div>
+        
+        <!-- Variant Images Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Variant Images</h5>
+            </div>
+            <div class="card-body">
+                {{ image_formset.management_form }}
+                <div id="images-container" class="formset-container">
+                    {% for form in image_formset %}
+                        <div class="formset-row">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.image }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-check-label">
+                                        {{ form.is_primary }} Primary
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form.sort_order }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ form.alt_text }}
+                                </div>
+                                <div class="col-md-1">
+                                    {% if form.instance.pk %}
+                                        <label class="form-check-label">
+                                            {{ form.DELETE }} Delete
+                                        </label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" id="add-image">Add Image</button>
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Save Variant</button>
+            <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addFormsetRow(containerId, formsetPrefix, totalFormsId) {
+        const container = document.getElementById(containerId);
+        const totalForms = document.getElementById(totalFormsId);
+        const formNum = parseInt(totalForms.value);
+        
+        const newForm = container.children[0].cloneNode(true);
+        const regex = new RegExp(`${formsetPrefix}-\\d+-`, 'g');
+        newForm.innerHTML = newForm.innerHTML.replace(regex, `${formsetPrefix}-${formNum}-`);
+        
+        newForm.querySelectorAll('input, select, textarea').forEach(input => {
+            if (input.type !== 'checkbox' && input.type !== 'file') {
+                input.value = '';
+            } else if (input.type === 'checkbox') {
+                input.checked = false;
+            }
+        });
+        
+        container.appendChild(newForm);
+        totalForms.value = formNum + 1;
+    }
+    
+    document.getElementById('add-attribute')?.addEventListener('click', () => {
+        addFormsetRow('attributes-container', 'attributes', 'id_attributes-TOTAL_FORMS');
+    });
+    
+    document.getElementById('add-image')?.addEventListener('click', () => {
+        addFormsetRow('images-container', 'images', 'id_images-TOTAL_FORMS');
+    });
+</script>
+{% endblock %}

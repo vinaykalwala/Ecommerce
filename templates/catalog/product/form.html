@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Catalog Management{% endblock %}
+
+{% block extra_css %}
+<style>
+    .formset-row {
+        background: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        position: relative;
+    }
+    .delete-row {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    .formset-container {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">{{ title }}</h1>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Products
+        </a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Product Information Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Product Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ product_form.name.id_for_label }}" class="form-label">Name *</label>
+                        {{ product_form.name }}
+                        {% if product_form.name.errors %}
+                            <div class="text-danger">{{ product_form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ product_form.category.id_for_label }}" class="form-label">Category *</label>
+                        {{ product_form.category }}
+                        {% if product_form.category.errors %}
+                            <div class="text-danger">{{ product_form.category.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ product_form.brand.id_for_label }}" class="form-label">Brand</label>
+                        {{ product_form.brand }}
+                        {% if product_form.brand.errors %}
+                            <div class="text-danger">{{ product_form.brand.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ product_form.status.id_for_label }}" class="form-label">Status</label>
+                        {{ product_form.status }}
+                        {% if product_form.status.errors %}
+                            <div class="text-danger">{{ product_form.status.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-12 mb-3">
+                        <label for="{{ product_form.description.id_for_label }}" class="form-label">Description</label>
+                        {{ product_form.description }}
+                        {% if product_form.description.errors %}
+                            <div class="text-danger">{{ product_form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            {{ product_form.is_featured }}
+                            <label class="form-check-label" for="{{ product_form.is_featured.id_for_label }}">
+                                Featured Product
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Attributes Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Product Attributes</h5>
+            </div>
+            <div class="card-body">
+                {{ attribute_formset.management_form }}
+                <div id="attributes-container" class="formset-container">
+                    {% for form in attribute_formset %}
+                        <div class="formset-row">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    {{ form.attribute }}
+                                </div>
+                                <div class="col-md-5">
+                                    {{ form.value }}
+                                </div>
+                                <div class="col-md-2">
+                                    {% if form.instance.pk %}
+                                        <label class="form-check-label">
+                                            {{ form.DELETE }} Delete
+                                        </label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" id="add-attribute">Add Attribute</button>
+            </div>
+        </div>
+        
+        <!-- Product Images Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Product Images</h5>
+            </div>
+            <div class="card-body">
+                {{ image_formset.management_form }}
+                <div id="images-container" class="formset-container">
+                    {% for form in image_formset %}
+                        <div class="formset-row">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form.image }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-check-label">
+                                        {{ form.is_primary }} Primary
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form.sort_order }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ form.alt_text }}
+                                </div>
+                                <div class="col-md-1">
+                                    {% if form.instance.pk %}
+                                        <label class="form-check-label">
+                                            {{ form.DELETE }} Delete
+                                        </label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" id="add-image">Add Image</button>
+            </div>
+        </div>
+        
+        <!-- Initial Variants Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Initial Variants (Optional)</h5>
+            </div>
+            <div class="card-body">
+                {{ variant_formset.management_form }}
+                <div id="variants-container" class="formset-container">
+                    {% for form in variant_formset %}
+                        <div class="formset-row">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    {{ form.sku }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form.price }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form.sale_price }}
+                                </div>
+                                <div class="col-md-1">
+                                    {{ form.current_stock }}
+                                </div>
+                                <div class="col-md-1">
+                                    {{ form.low_stock_threshold }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-check-label">
+                                        {{ form.is_active }} Active
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    {% if form.instance.pk %}
+                                        <label class="form-check-label">
+                                            {{ form.DELETE }} Delete
+                                        </label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" id="add-variant">Add Variant</button>
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <button type="submit" name="save" class="btn btn-primary">Save Product</button>
+            <button type="submit" name="save_continue" class="btn btn-success">Save & Continue</button>
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Dynamic formset management
+    function addFormsetRow(containerId, formsetPrefix, totalFormsId) {
+        const container = document.getElementById(containerId);
+        const totalForms = document.getElementById(totalFormsId);
+        const formNum = parseInt(totalForms.value);
+        
+        const newForm = container.children[0].cloneNode(true);
+        const regex = new RegExp(`${formsetPrefix}-\\d+-`, 'g');
+        newForm.innerHTML = newForm.innerHTML.replace(regex, `${formsetPrefix}-${formNum}-`);
+        
+        // Clear input values
+        newForm.querySelectorAll('input, select, textarea').forEach(input => {
+            if (input.type !== 'checkbox' && input.type !== 'file') {
+                input.value = '';
+            } else if (input.type === 'checkbox') {
+                input.checked = false;
+            }
+        });
+        
+        container.appendChild(newForm);
+        totalForms.value = formNum + 1;
+    }
+    
+    document.getElementById('add-attribute')?.addEventListener('click', () => {
+        addFormsetRow('attributes-container', 'attributes', 'id_attributes-TOTAL_FORMS');
+    });
+    
+    document.getElementById('add-image')?.addEventListener('click', () => {
+        addFormsetRow('images-container', 'images', 'id_images-TOTAL_FORMS');
+    });
+    
+    document.getElementById('add-variant')?.addEventListener('click', () => {
+        addFormsetRow('variants-container', 'variants', 'id_variants-TOTAL_FORMS');
+    });
+</script>
+{% endblock %}

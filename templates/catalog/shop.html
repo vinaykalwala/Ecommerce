@@ -1,0 +1,493 @@
+
+{% load static %}
+
+{% block title %}Shop - Our Products{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Shop Page Styles */
+    .shop-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 60px 0;
+        color: white;
+        margin-bottom: 40px;
+    }
+    
+    .filter-sidebar {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 20px;
+    }
+    
+    .filter-section {
+        margin-bottom: 25px;
+        border-bottom: 1px solid #eef2f7;
+        padding-bottom: 20px;
+    }
+    
+    .filter-section:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    
+    .filter-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #2d3748;
+    }
+    
+    .filter-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .filter-list li {
+        margin-bottom: 10px;
+    }
+    
+    .filter-list a {
+        color: #4a5568;
+        text-decoration: none;
+        display: flex;
+        justify-content: space-between;
+        transition: all 0.2s;
+    }
+    
+    .filter-list a:hover {
+        color: #667eea;
+        transform: translateX(5px);
+    }
+    
+    .filter-list .active {
+        color: #667eea;
+        font-weight: 600;
+    }
+    
+    .price-range {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .price-range input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .product-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1;
+    }
+    
+    .sale-badge {
+        background: #e53e3e;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .new-badge {
+        background: #48bb78;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover .product-image {
+        transform: scale(1.05);
+    }
+    
+    .product-info {
+        padding: 20px;
+    }
+    
+    .product-category {
+        font-size: 12px;
+        color: #667eea;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .product-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2d3748;
+        text-decoration: none;
+        display: block;
+    }
+    
+    .product-title:hover {
+        color: #667eea;
+    }
+    
+    .product-price {
+        font-size: 20px;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+    
+    .product-old-price {
+        font-size: 14px;
+        color: #a0aec0;
+        text-decoration: line-through;
+        margin-left: 10px;
+        font-weight: normal;
+    }
+    
+    .product-stock {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .stock-in {
+        color: #48bb78;
+    }
+    
+    .stock-low {
+        color: #ed8936;
+    }
+    
+    .stock-out {
+        color: #e53e3e;
+    }
+    
+    .btn-add-cart {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #667eea;
+        color: white;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    
+    .btn-add-cart:hover {
+        background: #5a67d8;
+        transform: translateY(-2px);
+    }
+    
+    .sort-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .sort-select {
+        padding: 8px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: white;
+    }
+    
+    .results-count {
+        color: #718096;
+    }
+    
+    @media (max-width: 768px) {
+        .filter-sidebar {
+            margin-bottom: 30px;
+            position: static;
+        }
+        
+        .sort-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Shop Hero -->
+<div class="shop-hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="display-4 mb-3">Shop Our Collection</h1>
+                <p class="lead mb-0">Discover amazing products at great prices</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3">
+            <div class="filter-sidebar">
+                <form method="get" id="filter-form">
+                    <!-- Search -->
+                    <div class="filter-section">
+                        <div class="filter-title">Search</div>
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ search_query }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div class="filter-section">
+                        <div class="filter-title">Categories</div>
+                        <ul class="filter-list">
+                            <li>
+                                <a href="{% url 'catalog:shop' %}" class="{% if not selected_category %}active{% endif %}">
+                                    All Categories
+                                    <span class="badge bg-secondary">{{ products.paginator.count }}</span>
+                                </a>
+                            </li>
+                            {% for category in categories %}
+                            <li>
+                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}category={{ category.slug }}{% for key, value in request.GET.items %}{% if key not in 'category,page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                                   class="{% if selected_category == category.slug %}active{% endif %}">
+                                    {{ category.name }}
+                                    <span class="badge bg-secondary">{{ category.product_count }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <!-- Brands -->
+                    <div class="filter-section">
+                        <div class="filter-title">Brands</div>
+                        <ul class="filter-list">
+                            <li>
+                                <a href="{% url 'catalog:shop' %}" class="{% if not selected_brand %}active{% endif %}">
+                                    All Brands
+                                </a>
+                            </li>
+                            {% for brand in brands %}
+                            <li>
+                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}brand={{ brand.slug }}{% for key, value in request.GET.items %}{% if key not in 'brand,page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                                   class="{% if selected_brand == brand.slug %}active{% endif %}">
+                                    {{ brand.name }}
+                                    <span class="badge bg-secondary">{{ brand.product_count }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <!-- Price Range -->
+                    <div class="filter-section">
+                        <div class="filter-title">Price Range</div>
+                        <div class="price-range">
+                            <input type="number" name="min_price" class="form-control" placeholder="Min" value="{{ min_price }}">
+                            <span class="align-self-center">-</span>
+                            <input type="number" name="max_price" class="form-control" placeholder="Max" value="{{ max_price }}">
+                        </div>
+                    </div>
+                    
+                    <!-- Special Filters -->
+                    <div class="filter-section">
+                        <div class="filter-title">Special</div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" name="on_sale" class="form-check-input" value="true" id="onSale" {% if on_sale == 'true' %}checked{% endif %}>
+                            <label class="form-check-label" for="onSale">On Sale Only</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="in_stock" class="form-check-input" value="true" id="inStock" {% if in_stock == 'true' %}checked{% endif %}>
+                            <label class="form-check-label" for="inStock">In Stock Only</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    <a href="{% url 'catalog:shop' %}" class="btn btn-outline-secondary w-100 mt-2">Clear All</a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="col-lg-9">
+            <!-- Sort Bar -->
+            <div class="sort-bar">
+                <div class="results-count">
+                    Showing {{ products.start_index }}-{{ products.end_index }} of {{ products.paginator.count }} products
+                </div>
+                <div>
+                    <label class="me-2">Sort by:</label>
+                    <select class="sort-select" id="sort-select">
+                        <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest</option>
+                        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest</option>
+                        <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name: A to Z</option>
+                        <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name: Z to A</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="product-card">
+                        <div class="product-badge">
+                            {% if product.variants.all|dictsort:"sale_price"|first %}
+                                {% with sale_variant=product.variants.all|dictsort:"sale_price"|first %}
+                                    {% if sale_variant.sale_price %}
+                                        <span class="sale-badge">
+                                            -{% widthratio sale_variant.sale_price sale_variant.price 100 %}% OFF
+                                        </span>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endif %}
+                            {% if product.is_featured %}
+                                <span class="new-badge ms-2">Featured</span>
+                            {% endif %}
+                        </div>
+                        
+<a href="{% url 'catalog:product_detail_customer' product.pk %}">
+                            {% if product.main_image %}
+                                <img src="{{ product.main_image.image.url }}" class="product-image" alt="{{ product.name }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.jpg' %}" class="product-image" alt="{{ product.name }}">
+                            {% endif %}
+                        </a>
+                        
+                        <div class="product-info">
+                            <span class="product-category">{{ product.category.name }}</span>
+                            <a href="{% url 'catalog:product_detail_customer' product.pk product.slug %}" class="product-title">
+                                {{ product.name|truncatechars:40 }}
+                            </a>
+                            
+                            <div class="product-price">
+                                {% with first_variant=product.variants.first %}
+                                    ${{ first_variant.final_price|floatformat:2 }}
+                                    {% if first_variant.sale_price %}
+                                        <span class="product-old-price">${{ first_variant.price|floatformat:2 }}</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                            
+                            <div class="product-stock">
+                                {% with first_variant=product.variants.first %}
+                                    {% if first_variant.in_stock %}
+                                        <span class="stock-in">
+                                            <i class="fas fa-check-circle"></i> In Stock
+                                        </span>
+                                    {% elif first_variant.current_stock > 0 %}
+                                        <span class="stock-low">
+                                            <i class="fas fa-exclamation-triangle"></i> Low Stock
+                                        </span>
+                                    {% else %}
+                                        <span class="stock-out">
+                                            <i class="fas fa-times-circle"></i> Out of Stock
+                                        </span>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                            
+                            <button class="btn-add-cart" onclick="addToCart({{ product.id }})">
+                                <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-4x text-muted mb-3"></i>
+                        <h3>No products found</h3>
+                        <p class="text-muted">Try adjusting your filters or search criteria.</p>
+                        <a href="{% url 'catalog:shop' %}" class="btn btn-primary">Clear Filters</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if products.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in products.paginator.page_range %}
+                        {% if products.number == num %}
+                            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                            <li class="page-item"><a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-submit form when sort select changes
+    document.getElementById('sort-select').addEventListener('change', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sort', this.value);
+        window.location.search = urlParams.toString();
+    });
+    
+    // Add to cart function
+    function addToCart(productId) {
+        // Implement your cart logic here
+        alert('Product ' + productId + ' added to cart!');
+    }
+</script>
+{% endblock %}

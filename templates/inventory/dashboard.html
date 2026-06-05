@@ -1,0 +1,162 @@
+{% extends 'catalog/admin/base_admin.html' %}
+
+{% block title %}Inventory Dashboard{% endblock %}
+
+{% block admin_content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4">Inventory Dashboard</h1>
+    
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Variants</h5>
+                    <h2 class="display-4">{{ total_variants }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Stock Units</h5>
+                    <h2 class="display-4">{{ total_stock }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Stock Value</h5>
+                    <h2 class="display-4">${{ stock_value|floatformat:0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Low Stock Items</h5>
+                    <h2 class="display-4">{{ low_stock }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stock Status Breakdown -->
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Well Stocked (>50 units)</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ well_stocked }}</h2>
+                    <p class="text-muted">Variants</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Low Stock (1-10 units)</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ low_stock }}</h2>
+                    <p class="text-muted">Variants</p>
+                    <a href="{% url 'inventory:low_stock_report' %}" class="btn btn-sm btn-warning">View Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Out of Stock</h5>
+                </div>
+                <div class="card-body text-center">
+                    <h2 class="display-4">{{ out_of_stock }}</h2>
+                    <p class="text-muted">Variants</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Low Stock Items and Recent Activities -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Low Stock Items (Top 10)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th>Stock</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in low_stock_items %}
+                                <tr>
+                                    <td>{{ item.product.name|truncatewords:5 }}</td>
+                                    <td>{{ item.sku }}</td>
+                                    <td>
+                                        <span class="badge {% if item.current_stock == 0 %}bg-danger{% else %}bg-warning{% endif %}">
+                                            {{ item.current_stock }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'inventory:inventory_adjust' item.pk %}" class="btn btn-sm btn-primary">
+                                            Adjust Stock
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Inventory Activities</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>SKU</th>
+                                    <th>Action</th>
+                                    <th>Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in recent_activities %}
+                                <tr>
+                                    <td>{{ activity.created_at|date:"Y-m-d H:i" }}</td>
+                                    <td>{{ activity.variant.sku }}</td>
+                                    <td>
+                                        <span class="badge {% if 'added' in activity.action %}bg-success{% elif 'removed' in activity.action %}bg-danger{% else %}bg-info{% endif %}">
+                                            {{ activity.get_action_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ activity.quantity }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
