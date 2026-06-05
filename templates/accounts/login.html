@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NOIR | SIGN IN — Zigzag Commerce Suite</title>
+    <title>NOIR | SIGN IN — Premium Commerce Suite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
    {% load static %}
@@ -18,6 +18,13 @@
             font-family: 'Inter', sans-serif;
             background: #FFFFFF;
             min-height: 100vh;
+        }
+
+        :root {
+            --accent-purple: #85107f;
+            --accent-purple-light: #f8eef7;
+            --accent-purple-dark: #5e0d5a;
+            --accent-purple-soft: #f3e8f2;
         }
 
         /* MAIN CONTAINER — form on LEFT, cards on RIGHT */
@@ -69,7 +76,7 @@
 
         .alert-message {
             background: #F8F8F8;
-            border-left: 3px solid #D4AF37;
+            border-left: 3px solid var(--accent-purple);
             padding: 14px 20px;
             border-radius: 16px;
             font-size: 13px;
@@ -103,10 +110,11 @@
             transition: all 0.2s;
             color: #000000;
         }
+      
         .input-group input:focus {
             outline: none;
-            border-color: #D4AF37;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(133, 16, 127, 0.1);
         }
         .input-group input::placeholder {
             color: #BBBBBB;
@@ -167,7 +175,7 @@
             transition: all 0.2s;
         }
         .refresh-btn:hover {
-            color: #D4AF37;
+            color: var(--accent-purple);
             background: rgba(0,0,0,0.05);
         }
 
@@ -189,10 +197,10 @@
             transition: all 0.3s;
         }
         .signin-btn:hover {
-            background: #D4AF37;
-            color: #000000;
+            background: var(--accent-purple);
+            color: #ffffff;
             transform: translateY(-2px);
-            box-shadow: 0 12px 26px -12px rgba(0,0,0,0.3);
+            box-shadow: 0 12px 26px -12px rgba(133, 16, 127, 0.4);
         }
 
         .form-footer {
@@ -207,7 +215,7 @@
             margin-bottom: 20px;
             transition: color 0.2s;
         }
-        .forgot-link:hover { color: #D4AF37; }
+        .forgot-link:hover { color: var(--accent-purple); }
         .divider {
             display: flex;
             align-items: center;
@@ -229,7 +237,7 @@
             text-decoration: none;
             font-size: 13px;
         }
-        .signup-link a:hover { color: #D4AF37; text-decoration: underline; }
+        .signup-link a:hover { color: var(--accent-purple); text-decoration: underline; }
         .secure-badge {
             margin-top: 14px;
             font-size: 11px;
@@ -239,7 +247,7 @@
             margin-right: 4px;
         }
 
-        /* ===== RIGHT PANEL — 6 Cards (3x2 grid, no gaps, alternating white/soft color) ===== */
+        /* ===== RIGHT PANEL — 6 Cards (3x2 grid, alternating white/soft purple) ===== */
         .cards-panel {
             width: 55%;
             display: flex;
@@ -264,12 +272,12 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(0,0,0,0.04);
+            background: rgba(133, 16, 127, 0.08);
             padding: 5px 16px;
             border-radius: 60px;
             font-size: 11px;
             font-weight: 600;
-            color: #1A1A1A;
+            color: var(--accent-purple);
             margin-bottom: 20px;
             letter-spacing: 0.4px;
         }
@@ -301,7 +309,7 @@
             grid-auto-rows: auto;
             margin: 0;
             width: 100%;
-            background: #F8F8F8;
+            background: #FFFFFF;
         }
 
         /* Card styling — no margins, sharp edges */
@@ -323,11 +331,11 @@
             border-right: 1px solid #EFEFEF;
         }
 
-        /* Soft card - using #F8F6F3 instead of black */
+        /* Soft card - Light Purple background */
         .zz-card-soft {
-            background: #F8F6F3;
-            border-bottom: 1px solid #E8E4DE;
-            border-right: 1px solid #E8E4DE;
+            background: #FCF8FB;
+            border-bottom: 1px solid #F0E6EE;
+            border-right: 1px solid #F0E6EE;
         }
 
         /* Remove right border from 3rd column cards */
@@ -357,13 +365,13 @@
         }
 
         .zz-card-white .zz-icon {
-            background: #F0F0F0;
-            color: #D4AF37;
+            background: #F5F0F5;
+            color: var(--accent-purple);
         }
 
         .zz-card-soft .zz-icon {
-            background: #EAE5DE;
-            color: #D4AF37;
+            background: #EEE5EC;
+            color: var(--accent-purple);
         }
 
         .zz-icon i {
@@ -409,7 +417,7 @@
         }
 
         .zz-card-soft .zz-meta {
-            color: #D4AF37;
+            color: var(--accent-purple);
         }
 
         /* Hover effect */
@@ -424,7 +432,7 @@
         }
 
         .zz-card-soft:hover {
-            background: #FDFAF7;
+            background: #FDF8FC;
         }
 
         /* Stats row below cards */
@@ -560,8 +568,8 @@
                 border-bottom: none;
             }
             .zz-card-soft {
-                border-bottom-color: #E8E4DE;
-                border-right-color: #E8E4DE;
+                border-bottom-color: #F0E6EE;
+                border-right-color: #F0E6EE;
             }
         }
         
@@ -675,7 +683,7 @@
                 gap: 18px;
             }
             .zz-card-soft {
-                border-bottom-color: #E8E4DE !important;
+                border-bottom-color: #F0E6EE !important;
             }
             .zz-card:nth-last-child(1) {
                 border-bottom: none !important;
@@ -800,7 +808,7 @@
                 <div class="signup-link">
                     <a href="{% url 'customer_signup' %}">Create an account</a>
                     {% if request.user.is_superuser %}
-                        <span class="secure-badge">| <a href="{% url 'admin_signup' %}" style="color:#D4AF37;">Admin portal</a></span>
+                        <span class="secure-badge">| <a href="{% url 'admin_signup' %}" style="color:var(--accent-purple);">Admin portal</a></span>
                     {% endif %}
                 </div>
                 <div class="secure-badge">
@@ -810,7 +818,7 @@
         </div>
     </div>
 
-    <!-- RIGHT PANEL: 6 Cards — 3x2 grid, alternating white / soft #F8F6F3 -->
+    <!-- RIGHT PANEL: 6 Cards — Purple/White Theme -->
     <div class="cards-panel">
         <div class="cards-container">
             <div class="hero-mini">
@@ -821,7 +829,7 @@
                 <p>Mobile-first platform with instant checkout, live tracking, and exclusive drops.</p>
             </div>
 
-            <!-- 6 cards grid — NO GAPS, alternating white / #F8F6F3 -->
+            <!-- 6 cards grid — alternating white / soft purple -->
             <div class="zigzag-grid">
                 <!-- Card 1 - White -->
                 <div class="zz-card zz-card-white">
@@ -835,7 +843,7 @@
                     </div>
                 </div>
 
-                <!-- Card 2 - Soft (#F8F6F3) -->
+                <!-- Card 2 - Soft Purple -->
                 <div class="zz-card zz-card-soft">
                     <div class="zz-icon">
                         <i class="fas fa-location-dot"></i>
@@ -859,7 +867,7 @@
                     </div>
                 </div>
 
-                <!-- Card 4 - Soft (#F8F6F3) -->
+                <!-- Card 4 - Soft Purple -->
                 <div class="zz-card zz-card-soft">
                     <div class="zz-icon">
                         <i class="fas fa-shield-alt"></i>
@@ -883,7 +891,7 @@
                     </div>
                 </div>
 
-                <!-- Card 6 - Soft (#F8F6F3) -->
+                <!-- Card 6 - Soft Purple -->
                 <div class="zz-card zz-card-soft">
                     <div class="zz-icon">
                         <i class="fas fa-headset"></i>
