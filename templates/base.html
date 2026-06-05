@@ -669,14 +669,14 @@
 
 <!-- Main Content -->
 <div class="container">
-    {% if messages %}
+    <!-- {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">
                 <span><i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}crown{% endif %}"></i> {{ message }}</span>
                 <button type="button" class="btn-close" data-dismiss="alert">&times;</button>
             </div>
         {% endfor %}
-    {% endif %}
+    {% endif %} -->
     {% block content %}
     <div style="text-align: center; padding: 60px 20px;">
         <i class="fas fa-mobile-alt" style="font-size: 64px; color: var(--accent-gold); margin-bottom: 20px;"></i>

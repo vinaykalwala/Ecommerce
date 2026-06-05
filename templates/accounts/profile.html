@@ -755,7 +755,7 @@
 
                         <!-- Action Buttons -->
                         <div class="actions-final">
-                            <a href="#" class="action-final action-pwd-final" id="pwdFinalBtn">
+                            <a href="{% url 'change_password_with_otp' %}" class="action-final action-pwd-final" id="pwdFinalBtn">
                                 <i class="fas fa-key"></i> Change Password
                             </a>
                             <a href="#" class="action-final action-wish-final" id="wishFinalBtn">
@@ -918,11 +918,9 @@
 </div>
 
 <script>
-    const pwdFinal = document.getElementById('pwdFinalBtn');
     const wishFinal = document.getElementById('wishFinalBtn');
     const orderFinal = document.getElementById('orderFinalBtn');
 
-    if (pwdFinal) pwdFinal.addEventListener('click', (e) => { e.preventDefault(); alert('🔐 Password change page - Add your URL here'); });
     if (wishFinal) wishFinal.addEventListener('click', (e) => { e.preventDefault(); alert('❤️ Wishlist page - Coming soon'); });
     if (orderFinal) orderFinal.addEventListener('click', (e) => { e.preventDefault(); alert('📦 Orders page - Coming soon'); });
 </script>
