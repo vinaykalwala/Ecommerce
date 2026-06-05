@@ -35,8 +35,9 @@
             --border-light: #eeeeef;
             --border-medium: #e2e2e4;
             --accent: #1a1a1a;
-            --accent-gold: #c7a23b;
-            --accent-gold-light: #e6d5a8;
+            --accent-rose: #85107f;
+            --accent-rose-light: #fce4ec;
+            --accent-rose-dark: #be18a8;
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
             --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.04);
             --shadow-lg: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
@@ -83,7 +84,7 @@
             text-decoration: none;
             color: var(--text-primary);
         }
-        .logo i { color: var(--accent-gold); font-size: 24px; }
+        .logo i { color: var(--accent-rose); font-size: 24px; }
 
         .nav-links {
             display: flex;
@@ -118,7 +119,7 @@
         }
         .search-input:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: var(--accent-rose);
         }
         .search-btn {
             position: absolute;
@@ -133,6 +134,7 @@
             border-radius: 50%;
             cursor: pointer;
         }
+        .search-btn:hover { color: var(--accent-rose); }
 
         .right-icons {
             display: flex;
@@ -151,12 +153,12 @@
             font-size: 18px;
             transition: var(--transition);
         }
-        .icon-btn:hover { background: var(--bg-secondary); color: var(--accent); }
+        .icon-btn:hover { background: var(--bg-secondary); color: var(--accent-rose); }
         .badge {
             position: absolute;
             top: 2px;
             right: 4px;
-            background: var(--accent-gold);
+            background: var(--accent-rose);
             color: white;
             font-size: 10px;
             font-weight: 700;
@@ -177,6 +179,7 @@
             font-weight: 500;
             font-size: 13px;
         }
+        .profile-btn:hover { color: var(--accent-rose); }
         .dropdown-menu-custom {
             position: absolute;
             top: 100%;
@@ -203,8 +206,8 @@
             text-decoration: none;
             font-size: 13px;
         }
-        .dropdown-item-custom i { width: 20px; color: var(--accent-gold); }
-        .dropdown-item-custom:hover { background: var(--bg-secondary); color: var(--accent); }
+        .dropdown-item-custom i { width: 20px; color: var(--accent-rose); }
+        .dropdown-item-custom:hover { background: var(--bg-secondary); color: var(--accent-rose); }
         .dropdown-divider { height: 1px; background: var(--border-light); margin: 8px 0; }
 
         .auth-buttons { display: flex; gap: 8px; }
@@ -218,6 +221,7 @@
             border: 1px solid var(--border-medium);
             color: var(--text-primary);
         }
+        .btn-login:hover { border-color: var(--accent-rose); color: var(--accent-rose); }
         .btn-signup {
             padding: 8px 22px;
             border-radius: 40px;
@@ -227,6 +231,7 @@
             background: var(--accent);
             color: white;
         }
+        .btn-signup:hover { background: var(--accent-rose); }
 
         .mobile-toggle {
             display: none;
@@ -237,6 +242,7 @@
             cursor: pointer;
             font-size: 16px;
         }
+        .mobile-toggle:hover { color: var(--accent-rose); }
 
         /* Mobile Search */
         .mobile-search-bar {
@@ -254,6 +260,7 @@
             font-size: 14px;
             background: var(--bg-secondary);
         }
+        .mobile-search-input:focus { border-color: var(--accent-rose); outline: none; }
         .mobile-search-btn {
             position: absolute;
             right: 8px;
@@ -265,8 +272,9 @@
             font-size: 16px;
             cursor: pointer;
         }
+        .mobile-search-btn:hover { color: var(--accent-rose); }
 
-        /* Mobile Menu - FIXED TOGGLE */
+        /* Mobile Menu */
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -326,8 +334,8 @@
             border-bottom: 1px solid var(--border-light);
             transition: var(--transition);
         }
-        .mobile-menu-item i { width: 28px; color: var(--accent-gold); font-size: 18px; }
-        .mobile-menu-item:hover { color: var(--accent-gold); padding-left: 8px; }
+        .mobile-menu-item i { width: 28px; color: var(--accent-rose); font-size: 18px; }
+        .mobile-menu-item:hover { color: var(--accent-rose); padding-left: 8px; }
 
         /* Cart Sidebar */
         .cart-sidebar {
@@ -362,11 +370,13 @@
         .cart-item { display: flex; gap: 16px; background: white; padding: 16px; border-radius: var(--radius-md); margin-bottom: 14px; border: 1px solid var(--border-light); }
         .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm); background: #f0f0f0; }
         .qty-btn { width: 32px; height: 32px; border: 1px solid var(--border-medium); background: white; border-radius: 10px; cursor: pointer; }
-        .qty-btn:hover { background: var(--accent-gold); color: white; border-color: var(--accent-gold); }
-        .btn-checkout { background: var(--accent); color: white; border: none; padding: 14px; border-radius: var(--radius-md); font-weight: 600; width: 100%; cursor: pointer; }
+        .qty-btn:hover { background: var(--accent-rose); color: white; border-color: var(--accent-rose); }
+        .btn-checkout { background: var(--accent-rose); color: white; border: none; padding: 14px; border-radius: var(--radius-md); font-weight: 600; width: 100%; cursor: pointer; }
+        .btn-checkout:hover { background: var(--accent-rose-dark); }
         .btn-secondary { background: transparent; border: 1.5px solid var(--border-medium); padding: 12px; border-radius: var(--radius-md); width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-secondary:hover { border-color: var(--accent-rose); color: var(--accent-rose); }
 
-        /* ==================== MODERN PREMIUM FOOTER ==================== */
+        /* Premium Footer */
         .premium-footer {
             background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
             color: #e0e0e0;
@@ -389,7 +399,7 @@
             margin-bottom: 16px;
             color: white;
         }
-        .footer-brand h3 i { color: var(--accent-gold); margin-right: 8px; }
+        .footer-brand h3 i { color: var(--accent-rose); margin-right: 8px; }
         .footer-brand p {
             font-size: 13px;
             line-height: 1.6;
@@ -413,7 +423,7 @@
             text-decoration: none;
         }
         .footer-social a:hover {
-            background: var(--accent-gold);
+            background: var(--accent-rose);
             color: #0a0a0a;
             transform: translateY(-3px);
         }
@@ -438,7 +448,7 @@
             transition: var(--transition);
         }
         .footer-col ul li a:hover {
-            color: var(--accent-gold);
+            color: var(--accent-rose);
             padding-left: 4px;
         }
         .newsletter-form {
@@ -455,19 +465,20 @@
             color: white;
             font-size: 13px;
         }
+        .newsletter-form input:focus { outline: none; border-color: var(--accent-rose); }
         .newsletter-form input::placeholder { color: #777; }
         .newsletter-form button {
-            background: var(--accent-gold);
+            background: var(--accent-rose);
             border: none;
             border-radius: 60px;
             padding: 0 24px;
-            color: #0a0a0a;
+            color: white;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
         }
         .newsletter-form button:hover {
-            background: #d4af37;
+            background: var(--accent-rose-dark);
             transform: translateY(-2px);
         }
         .payment-icons {
@@ -481,7 +492,7 @@
             color: #888;
             transition: var(--transition);
         }
-        .payment-icons i:hover { color: var(--accent-gold); }
+        .payment-icons i:hover { color: var(--accent-rose); }
         .footer-bottom {
             max-width: 1400px;
             margin: 0 auto;
@@ -504,7 +515,7 @@
             text-decoration: none;
             transition: var(--transition);
         }
-        .footer-bottom-links a:hover { color: var(--accent-gold); }
+        .footer-bottom-links a:hover { color: var(--accent-rose); }
         .back-to-top-btn {
             background: rgba(255,255,255,0.08);
             border: none;
@@ -516,7 +527,7 @@
             transition: var(--transition);
         }
         .back-to-top-btn:hover {
-            background: var(--accent-gold);
+            background: var(--accent-rose);
             color: #0a0a0a;
         }
 
@@ -622,7 +633,7 @@
 <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
 <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-menu-header">
-        <h3><i class="fas fa-gem" style="color: var(--accent-gold);"></i> NOIR</h3>
+        <h3><i class="fas fa-gem" style="color: var(--accent-rose);"></i> NOIR</h3>
         <button class="mobile-menu-close" id="mobileMenuCloseBtn"><i class="fas fa-times"></i></button>
     </div>
     <div class="mobile-menu-items">
@@ -648,7 +659,7 @@
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 <div class="cart-sidebar" id="cartSidebar">
     <div class="cart-header">
-        <h5><i class="fas fa-shopping-bag"></i> Shopping Bag</h5>
+        <h5><i class="fas fa-shopping-bag" style="color: var(--accent-rose);"></i> Shopping Bag</h5>
         <button onclick="toggleCart()" style="background: none; border: none; font-size: 22px; cursor: pointer;"><i class="fas fa-times"></i></button>
     </div>
     <div class="cart-body" id="cartItemsContainer">
@@ -660,7 +671,7 @@
     <div class="cart-footer" id="cartFooter" style="display:none;">
         <div style="display:flex; justify-content:space-between; margin-bottom:18px;">
             <strong>Subtotal</strong>
-            <strong id="cartTotal" style="font-size:22px;">$0.00</strong>
+            <strong id="cartTotal" style="font-size:22px; color: var(--accent-rose);">$0.00</strong>
         </div>
         <button class="btn-checkout" onclick="alert('Checkout coming soon')">Proceed to Checkout</button>
         <button class="btn-secondary" onclick="toggleCart()">Continue Shopping</button>
@@ -669,24 +680,16 @@
 
 <!-- Main Content -->
 <div class="container">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                <span><i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}crown{% endif %}"></i> {{ message }}</span>
-                <button type="button" class="btn-close" data-dismiss="alert">&times;</button>
-            </div>
-        {% endfor %}
-    {% endif %}
     {% block content %}
     <div style="text-align: center; padding: 60px 20px;">
-        <i class="fas fa-mobile-alt" style="font-size: 64px; color: var(--accent-gold); margin-bottom: 20px;"></i>
+        <i class="fas fa-mobile-alt" style="font-size: 64px; color: var(--accent-rose); margin-bottom: 20px;"></i>
         <h2>Welcome to NOIR</h2>
         <p style="color: var(--text-secondary); margin-top: 12px;">Discover the finest collection of premium mobiles.</p>
     </div>
     {% endblock %}
 </div>
 
-<!-- Modern Premium Footer -->
+<!-- Premium Footer -->
 <footer class="premium-footer">
     <div class="footer-top">
         <div class="footer-brand">
@@ -745,7 +748,7 @@
             <a href="#">Accessibility</a>
         </div>
         <div style="display: flex; gap: 16px; align-items: center;">
-            <span><i class="fas fa-gem"></i> © 2025 NOIR — Modern Essentials</span>
+            <span><i class="fas fa-gem" style="color: var(--accent-rose);"></i> © 2025 NOIR — Modern Essentials</span>
             <button class="back-to-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
                 <i class="fas fa-arrow-up"></i> Top
             </button>
@@ -754,7 +757,7 @@
 </footer>
 
 <script>
-    // Mobile Menu Toggle - FULLY WORKING
+    // Mobile Menu Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggleBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -770,15 +773,10 @@
         mobileMenuOverlay.classList.remove('active');
         document.body.style.overflow = '';
     }
-    if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', openMobileMenu);
-    }
-    if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
-    }
-    if (mobileMenuOverlay) {
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-    }
+    window.closeMobileMenu = closeMobileMenu;
+    if (mobileMenuToggle) mobileMenuToggle.addEventListener('click', openMobileMenu);
+    if (mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+    if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
     // Cart functionality
     function getCart() {
@@ -817,7 +815,7 @@
                 <img src="${item.image || 'https://placehold.co/80x80/e9e9ef/888?text=item'}" class="cart-item-img">
                 <div style="flex:1">
                     <div style="font-weight:600;">${item.title.substring(0, 32)}</div>
-                    <div style="color:var(--accent-gold); margin-top:6px;">$${item.price.toFixed(2)}</div>
+                    <div style="color:var(--accent-rose); margin-top:6px;">$${item.price.toFixed(2)}</div>
                     <div style="display:flex; gap:12px; margin-top:12px;">
                         <button class="qty-btn" onclick="updateQuantity(${idx}, -1)">−</button>
                         <span>${item.quantity}</span>

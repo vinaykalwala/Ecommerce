@@ -1,111 +1,927 @@
 {% extends parent_template %}
 
 {% block content %}
-<div class="page-content">
-    <div class="col-md-4">
-        <div class="card shadow mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Profile Picture</h5>
-            </div>
-            <div class="card-body text-center">
-                {% if profile.profile_picture %}
-                    <img src="{{ profile.profile_picture.url }}" class="profile-pic mb-3" alt="Profile Picture">
-                {% else %}
-                    <div class="profile-pic bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px; border-radius: 50%;">
-                        <i class="fas fa-user fa-4x"></i>
-                    </div>
-                {% endif %}
-                <h5>{{ user.get_full_name|default:user.username }}</h5>
-                <p class="text-muted">{{ user.user_type|title }}</p>
-                <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-edit"></i> Edit Profile
-                </a>
-            </div>
-        </div>
-    </div>
+<style>
+    /* ============================================
+       ✦ FINAL MASTERPIECE - PERFECT PROFILE ✦
+       White Profile Card | Role+Edit Row | Responsive 320px+
+    ============================================ */
     
-    <div class="col-md-8">
-        <div class="card shadow mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Personal Information</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-borderless">
-                    <tr>
-                        <th width="30%">Full Name:</th>
-                        <td>{{ user.first_name }} {{ user.last_name }}</td>
-                    </tr>
-                    <tr>
-                        <th>Email:</th>
-                        <td>{{ user.email }}</td>
-                    </tr>
-                    <tr>
-                        <th>Mobile Number:</th>
-                        <td>{{ user.mobile_number }}</td>
-                    </tr>
-                    <tr>
-                        <th>Gender:</th>
-                        <td>{{ profile.get_gender_display|default:"Not specified" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Date of Birth:</th>
-                        <td>{{ profile.date_of_birth|date:"F d, Y"|default:"Not specified" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Bio:</th>
-                        <td>{{ profile.bio|default:"No bio added" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Account Type:</th>
-                        <td>
-                            <span class="badge {% if user.user_type == 'superuser' %}bg-danger{% elif user.user_type == 'admin' %}bg-warning{% else %}bg-info{% endif %}">
-                                {{ user.user_type|upper }}
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Email Verified:</th>
-                        <td>
-                            {% if user.email_verified %}
-                                <span class="badge bg-success">Yes</span>
-                            {% else %}
-                                <span class="badge bg-warning">No</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </table>
-            </div>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .final-wrap {
+        background: linear-gradient(145deg, #fcfcfc);
+        min-height: calc(100vh - 70px);
+        font-family: 'Inter', sans-serif;
+        padding: 15px 25px;
+    }
+
+    .final-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .final-header {
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .final-header h1 {
+        font-size: clamp(26px, 5vw, 34px);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #0a0c12, #3a3a5a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 6px;
+    }
+
+    .final-header p {
+        font-size: clamp(13px, 4vw, 15px);
+        color: #5a6a85;
+    }
+
+    /* Grid */
+    .final-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 28px;
+    }
+
+    .final-left {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .final-right {
+        flex: 2.2;
+        min-width: 280px;
+    }
+
+    /* Cards */
+    .final-card {
+        background: #ffffff;
+        border-radius: 28px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 28px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+    }
+
+    .final-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+    }
+
+    .final-card-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .final-card-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .final-card-header-left i {
+        font-size: 18px;
+        color: #0a0c12;
+    }
+
+    .final-card-header-left h3 {
+        font-size: 17px;
+        font-weight: 700;
+        color: #0a0c12;
+        margin: 0;
+    }
+
+    .final-card-body {
+        padding: 24px;
+    }
+
+    /* Profile Card - WHITE BACKGROUND */
+    .profile-final {
+        text-align: center;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 28px 20px;
+    }
+
+    .avatar-final {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        border: 4px solid #f0f2f5;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    .avatar-placeholder-final {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto;
+        background: linear-gradient(145deg, #f5f7fc, #eef2f8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid #f0f2f5;
+    }
+
+    .avatar-placeholder-final i {
+        font-size: 52px;
+        color: #9aa6b5;
+    }
+
+    .name-final {
+        font-size: clamp(20px, 5vw, 24px);
+        font-weight: 800;
+        margin: 16px 0 0;
+        color: #0a0c12;
+    }
+
+    /* ROLE AND EDIT IN ONE ROW */
+    .role-edit-final {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin: 12px 0 20px;
+        flex-wrap: wrap;
+    }
+
+    .role-final {
+        display: inline-block;
+        padding: 6px 18px;
+        background: #f0f2f5;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #5a6a85;
+    }
+
+    .btn-edit-final {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 20px;
+        background: #0a0c12;
+        border: none;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.25s;
+    }
+
+    .btn-edit-final:hover {
+        background: #2a2c32;
+        transform: translateY(-2px);
+    }
+
+    .divider-final {
+        height: 1px;
+        background: #f0f2f5;
+        margin: 20px 0;
+    }
+
+    /* Stats */
+    .stats-final {
+        display: flex;
+        justify-content: space-around;
+        margin: 8px 0;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .stat-final {
+        text-align: center;
+        flex: 1;
+        min-width: 70px;
+    }
+
+    .stat-number-final {
+        font-size: clamp(22px, 5vw, 28px);
+        font-weight: 800;
+        color: #0a0c12;
+    }
+
+    .stat-label-final {
+        font-size: 10px;
+        font-weight: 500;
+        color: #8a99b0;
+        margin-top: 4px;
+        text-transform: uppercase;
+    }
+
+    /* Action Buttons */
+    .actions-final {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 8px;
+        padding: 2px 20px;
+        padding-bottom: 20px;
+    }
+
+    .action-final {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 60px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.25s;
+        cursor: pointer;
+    }
+
+    .action-pwd-final {
+        background: #0a0c12;
+        color: #fff;
+    }
+
+    .action-pwd-final:hover {
+        background: #2a2c32;
+        transform: translateX(5px);
+    }
+
+    .action-wish-final {
+        background: #fef2f5;
+        color: #b83b5e;
+        border: 1px solid #fce7f0;
+    }
+
+    .action-wish-final:hover {
+        background: #fce7f0;
+        transform: translateX(5px);
+    }
+
+    .action-order-final {
+        background: #eef5ff;
+        color: #1e6fdf;
+        border: 1px solid #dfebf8;
+    }
+
+    .action-order-final:hover {
+        background: #dfebf8;
+        transform: translateX(5px);
+    }
+
+    /* Info Grid */
+    .info-final-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .info-final-panel {
+        background: #fafcfd;
+        border-radius: 20px;
+        padding: 18px;
+        border: 1px solid #eef2f8;
+        transition: all 0.25s;
+    }
+
+    .info-final-panel:hover {
+        border-color: #d0d8e4;
+        background: #fff;
+    }
+
+    .info-panel-header-final {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f0f2f5;
+    }
+
+    .info-panel-header-final i {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 10px;
+        font-size: 14px;
+        color: #0a0c12;
+        border: 1px solid #eef2f8;
+    }
+
+    .info-panel-header-final span {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0a0c12;
+    }
+
+    .info-row-final {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 9px 0;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .info-label-final {
+        font-size: 12px;
+        font-weight: 500;
+        color: #8a99b0;
+    }
+
+    .info-value-final {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a2634;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .full-width-final {
+        grid-column: span 2;
+    }
+
+    /* Badges */
+    .badge-final {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .badge-super-final {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .badge-admin-final {
+        background: #eef2ff;
+        color: #2563eb;
+    }
+
+    .badge-customer-final {
+        background: #f8f9fc;
+        color: #4a5a72;
+        border: 1px solid #eef2f8;
+    }
+
+    .badge-verified-final {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .badge-pending-final {
+        background: #fffbeb;
+        color: #d97706;
+    }
+
+    .badge-active-final {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    /* Status Row */
+    .status-row-final {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: space-between;
+    }
+
+    .status-item-final {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-width: 130px;
+    }
+
+    /* Address Grid */
+    .address-final-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+    }
+
+    .address-final-item {
+        background: #fafcfd;
+        border-radius: 20px;
+        padding: 16px;
+        border: 1px solid #eef2f8;
+        transition: all 0.25s;
+    }
+
+    .address-final-item:hover {
+        border-color: #d0d8e4;
+        transform: translateY(-2px);
+        background: #fff;
+    }
+
+    .address-badge-final {
+        display: inline-block;
+        padding: 3px 10px;
+        background: #f0f2f5;
+        border-radius: 30px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #5a6a85;
+    }
+
+    .address-default-final {
+        background: #eef5ff;
+        color: #1e6fdf;
+        margin-left: 6px;
+    }
+
+    .address-name-final {
+        font-weight: 700;
+        font-size: 14px;
+        color: #0a0c12;
+        margin: 10px 0 4px;
+    }
+
+    .address-line-final {
+        font-size: 12px;
+        color: #7e8aa2;
+        margin: 3px 0;
+        line-height: 1.4;
+    }
+
+    /* Empty State */
+    .empty-final {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .empty-final i {
+        font-size: 48px;
+        color: #cbd5e1;
+        margin-bottom: 12px;
+    }
+
+    .empty-final p {
+        color: #8a99b0;
+        margin-bottom: 16px;
+        font-size: 13px;
+    }
+
+    .btn-add-final {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 22px;
+        background: #0a0c12;
+        color: #fff;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.25s;
+    }
+
+    .btn-add-final:hover {
+        background: #2a2c32;
+        transform: translateY(-2px);
+    }
+
+    .view-link-final {
+        font-size: 12px;
+        font-weight: 500;
+        color: #8a99b0;
+        text-decoration: none;
+    }
+
+    .view-link-final:hover {
+        color: #0a0c12;
+    }
+
+    /* ===== EXTREME RESPONSIVE 320px+ ===== */
+    @media (max-width: 1000px) {
+        .final-wrap {
+            padding: 28px 32px;
+        }
+        .info-final-grid {
+            gap: 16px;
+        }
+    }
+
+    @media (max-width: 850px) {
+        .final-wrap {
+            padding: 24px 28px;
+        }
+        .info-final-grid {
+            grid-template-columns: 1fr;
+        }
+        .full-width-final {
+            grid-column: span 1;
+        }
+        .status-row-final {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .status-item-final {
+            width: 100%;
+            justify-content: space-between;
+        }
+        .info-row-final {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .info-value-final {
+            text-align: left;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .final-wrap {
+            padding: 20px;
+        }
+        .final-card-header {
+            padding: 14px 18px;
+        }
+        .final-card-body {
+            padding: 18px;
+        }
+        .avatar-final, .avatar-placeholder-final {
+            width: 100px;
+            height: 100px;
+        }
+        .name-final {
+            font-size: 20px;
+        }
+        .action-final {
+            padding: 10px;
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .final-wrap {
+            padding: 16px;
+        }
+        .final-header h1 {
+            font-size: 24px;
+        }
+        .stats-final {
+            gap: 8px;
+        }
+        .stat-final {
+            min-width: 60px;
+        }
+        .stat-number-final {
+            font-size: 20px;
+        }
+        .stat-label-final {
+            font-size: 9px;
+        }
+        .role-edit-final {
+            gap: 8px;
+        }
+        .role-final {
+            padding: 4px 14px;
+            font-size: 11px;
+        }
+        .btn-edit-final {
+            padding: 4px 14px;
+            font-size: 11px;
+        }
+        .address-final-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .final-wrap {
+            padding: 12px;
+        }
+        .final-card-header-left i {
+            font-size: 14px;
+        }
+        .final-card-header-left h3 {
+            font-size: 14px;
+        }
+        .final-card-body {
+            padding: 14px;
+        }
+        .profile-final {
+            padding: 18px 12px;
+        }
+        .avatar-final, .avatar-placeholder-final {
+            width: 80px;
+            height: 80px;
+        }
+        .avatar-placeholder-final i {
+            font-size: 40px;
+        }
+        .name-final {
+            font-size: 18px;
+            margin: 12px 0 0;
+        }
+        .role-edit-final {
+            margin: 8px 0 14px;
+        }
+        .role-final {
+            padding: 3px 12px;
+            font-size: 10px;
+        }
+        .btn-edit-final {
+            padding: 3px 12px;
+            font-size: 10px;
+        }
+        .stat-number-final {
+            font-size: 18px;
+        }
+        .stat-label-final {
+            font-size: 8px;
+        }
+        .action-final {
+            padding: 8px;
+            font-size: 11px;
+        }
+        .info-final-panel {
+            padding: 12px;
+        }
+        .info-label-final {
+            font-size: 10px;
+        }
+        .info-value-final {
+            font-size: 11px;
+        }
+        .badge-final {
+            padding: 3px 8px;
+            font-size: 9px;
+        }
+        .address-final-item {
+            padding: 12px;
+        }
+        .address-name-final {
+            font-size: 13px;
+        }
+        .address-line-final {
+            font-size: 11px;
+        }
+        .empty-final {
+            padding: 30px 16px;
+        }
+        .empty-final i {
+            font-size: 40px;
+        }
+        .btn-add-final {
+            padding: 7px 18px;
+            font-size: 11px;
+        }
+    }
+</style>
+
+<div class="final-wrap">
+    <div class="final-container">
+        <!-- Header -->
+        <div class="final-header">
+            <h1>My Profile</h1>
+            <p>Manage your account, personal information, and saved addresses</p>
         </div>
-        
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Recent Addresses</h5>
-                <a href="{% url 'address_list' %}" class="btn btn-sm btn-light">View All</a>
-            </div>
-            <div class="card-body">
-                {% if addresses %}
-                    {% for address in addresses %}
-                        <div class="border-bottom mb-3 pb-3">
-                            <h6>{{ address.address_type|title }}</h6>
-                            <p class="mb-0">{{ address.full_name }}</p>
-                            <p class="mb-0">{{ address.address_line_1 }}</p>
-                            {% if address.address_line_2 %}
-                                <p class="mb-0">{{ address.address_line_2 }}</p>
+
+        <!-- Main Grid -->
+        <div class="final-grid">
+            <!-- LEFT COLUMN - Profile Card (WHITE) -->
+            <div class="final-left">
+                <div class="final-card">
+                    <div class="final-card-body" style="padding: 0;">
+                        <div class="profile-final">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" class="avatar-final" alt="Profile">
+                            {% else %}
+                                <div class="avatar-placeholder-final">
+                                    <i class="fas fa-user-astronaut"></i>
+                                </div>
                             {% endif %}
-                            <p class="mb-0">{{ address.city }}, {{ address.state }} - {{ address.postal_code }}</p>
-                            <p class="mb-0">{{ address.country }}</p>
-                            <p class="mb-0">Mobile: {{ address.mobile_number }}</p>
-                            {% if address.is_default %}
-                                <span class="badge bg-success mt-2">Default Address</span>
+                            
+                            <h2 class="name-final">{{ user.get_full_name|default:user.username }}</h2>
+                            
+                            <!-- Role and Edit in ONE ROW -->
+                            <div class="role-edit-final">
+                                <span class="role-final">{{ user.user_type|title }}</span>
+                                <a href="{% url 'edit_profile' %}" class="btn-edit-final">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+
+                            <div class="divider-final"></div>
+
+                            <!-- Stats -->
+                            <div class="stats-final">
+                                <div class="stat-final">
+                                    <div class="stat-number-final">{{ addresses|length }}</div>
+                                    <div class="stat-label-final">Addresses</div>
+                                </div>
+                                <div class="stat-final">
+                                    <div class="stat-number-final">0</div>
+                                    <div class="stat-label-final">Wishlist</div>
+                                </div>
+                                <div class="stat-final">
+                                    <div class="stat-number-final">0</div>
+                                    <div class="stat-label-final">Orders</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="actions-final">
+                            <a href="{% url 'change_password_with_otp' %}" class="action-final action-pwd-final" id="pwdFinalBtn">
+                                <i class="fas fa-key"></i> Change Password
+                            </a>
+                            <a href="#" class="action-final action-wish-final" id="wishFinalBtn">
+                                <i class="fas fa-heart"></i> My Wishlist
+                            </a>
+                            <a href="#" class="action-final action-order-final" id="orderFinalBtn">
+                                <i class="fas fa-shopping-bag"></i> My Orders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="final-right">
+                <!-- Personal Information -->
+                <div class="final-card">
+                    <div class="final-card-header">
+                        <div class="final-card-header-left">
+                            <i class="fas fa-id-card"></i>
+                            <h3>Personal Information</h3>
+                        </div>
+                    </div>
+                    <div class="final-card-body">
+                        <div class="info-final-grid">
+                            <!-- Contact Panel -->
+                            <div class="info-final-panel">
+                                <div class="info-panel-header-final">
+                                    <i class="fas fa-address-card"></i>
+                                    <span>Contact Details</span>
+                                </div>
+                                <div class="info-row-final">
+                                    <span class="info-label-final">Full Name</span>
+                                    <span class="info-value-final">{{ user.first_name }} {{ user.last_name }}</span>
+                                </div>
+                                <div class="info-row-final">
+                                    <span class="info-label-final">Email</span>
+                                    <span class="info-value-final">{{ user.email }}</span>
+                                </div>
+                                <div class="info-row-final">
+                                    <span class="info-label-final">Mobile</span>
+                                    <span class="info-value-final">{{ user.mobile_number|default:"Not specified" }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Personal Panel -->
+                            <div class="info-final-panel">
+                                <div class="info-panel-header-final">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Personal Details</span>
+                                </div>
+                                <div class="info-row-final">
+                                    <span class="info-label-final">Gender</span>
+                                    <span class="info-value-final">{{ profile.get_gender_display|default:"Not specified" }}</span>
+                                </div>
+                                <div class="info-row-final">
+                                    <span class="info-label-final">Birth Date</span>
+                                    <span class="info-value-final">{{ profile.date_of_birth|date:"F d, Y"|default:"Not specified" }}</span>
+                                </div>
+                                <div class="info-row-final">
+                                    <span class="info-label-final">Member Since</span>
+                                    <span class="info-value-final">{{ user.date_joined|date:"F d, Y" }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Account Status -->
+                            <div class="info-final-panel full-width-final">
+                                <div class="info-panel-header-final">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Account Status</span>
+                                </div>
+                                <div class="status-row-final">
+                                    <div class="status-item-final">
+                                        <span class="info-label-final">Account Type</span>
+                                        <span class="info-value-final">
+                                            <span class="badge-final 
+                                                {% if user.user_type == 'superuser' %}badge-super-final
+                                                {% elif user.user_type == 'admin' %}badge-admin-final
+                                                {% else %}badge-customer-final{% endif %}">
+                                                {{ user.user_type|upper }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="status-item-final">
+                                        <span class="info-label-final">Email Status</span>
+                                        <span class="info-value-final">
+                                            {% if user.email_verified %}
+                                                <span class="badge-final badge-verified-final">✓ Verified</span>
+                                            {% else %}
+                                                <span class="badge-final badge-pending-final">⏳ Pending</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="status-item-final">
+                                        <span class="info-label-final">Account Status</span>
+                                        <span class="info-value-final">
+                                            <span class="badge-final badge-active-final">● Active</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bio -->
+                            {% if profile.bio %}
+                            <div class="info-final-panel full-width-final">
+                                <div class="info-panel-header-final">
+                                    <i class="fas fa-pen-fancy"></i>
+                                    <span>About Me</span>
+                                </div>
+                                <div class="info-value-final" style="line-height: 1.5;">{{ profile.bio }}</div>
+                            </div>
                             {% endif %}
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="text-muted">No addresses added yet.</p>
-                    <a href="{% url 'add_address' %}" class="btn btn-primary btn-sm">Add Address</a>
-                {% endif %}
+                    </div>
+                </div>
+
+                <!-- Addresses -->
+                <div class="final-card">
+                    <div class="final-card-header">
+                        <div class="final-card-header-left">
+                            <i class="fas fa-location-dot"></i>
+                            <h3>Saved Addresses</h3>
+                        </div>
+                        <a href="{% url 'address_list' %}" class="view-link-final">View All →</a>
+                    </div>
+                    <div class="final-card-body">
+                        {% if addresses %}
+                            <div class="address-final-grid">
+                                {% for address in addresses %}
+                                    <div class="address-final-item">
+                                        <div>
+                                            <span class="address-badge-final">{{ address.address_type|title }}</span>
+                                            {% if address.is_default %}
+                                                <span class="address-badge-final address-default-final">Default</span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="address-name-final">{{ address.full_name }}</p>
+                                        <p class="address-line-final">{{ address.address_line_1 }}</p>
+                                        {% if address.address_line_2 %}
+                                            <p class="address-line-final">{{ address.address_line_2 }}</p>
+                                        {% endif %}
+                                        <p class="address-line-final">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
+                                        <p class="address-line-final">{{ address.country }}</p>
+                                        <p class="address-line-final">📞 {{ address.mobile_number }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-final">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p>No saved addresses yet</p>
+                                <a href="{% url 'add_address' %}" class="btn-add-final">+ Add Address</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const wishFinal = document.getElementById('wishFinalBtn');
+    const orderFinal = document.getElementById('orderFinalBtn');
+
+    if (wishFinal) wishFinal.addEventListener('click', (e) => { e.preventDefault(); alert('❤️ Wishlist page - Coming soon'); });
+    if (orderFinal) orderFinal.addEventListener('click', (e) => { e.preventDefault(); alert('📦 Orders page - Coming soon'); });
+</script>
 {% endblock %}
