@@ -21,19 +21,21 @@
             overflow-x: hidden;
         }
 
-        /* Professional Dark Theme - Black, White & Gold only */
+        /* Professional Theme - Light Black/Dark Gray Sidebar, Purple gradient footer */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
-            --bg-sidebar: #0a0a0a;
-            --bg-sidebar-hover: #1a1a1a;
+            --bg-sidebar: #181c22;
+            --bg-sidebar-hover: #374151;
             --text-primary: #111111;
             --text-secondary: #555555;
-            --text-sidebar: #a0a0a0;
+            --text-sidebar: #cbd5e1;
             --text-sidebar-hover: #ffffff;
             --border-light: #e8e8ec;
-            --accent-gold: #d4af37;
-            --accent-gold-dark: #b4942c;
+            --border-sidebar: rgba(255, 255, 255, 0.08);
+            --accent-purple: #85107f;
+            --accent-purple-dark: #85107f;
+            --accent-purple-light: #f8eef7;
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
             --radius-sm: 8px;
@@ -46,7 +48,7 @@
             min-height: 100vh;
         }
 
-        /* ========== PREMIUM SIDEBAR ========== */
+        /* ========== LIGHT BLACK/DARK GRAY SIDEBAR ========== */
         .premium-sidebar {
             position: fixed;
             left: 0;
@@ -58,24 +60,24 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .premium-sidebar::-webkit-scrollbar {
             width: 4px;
         }
         .premium-sidebar::-webkit-scrollbar-track {
-            background: #1a1a1a;
+            background: #111827;
         }
         .premium-sidebar::-webkit-scrollbar-thumb {
-            background: #d4af37;
+            background: #4b5563;
             border-radius: 4px;
         }
 
         /* Sidebar Header */
         .sidebar-header {
             padding: 28px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .sidebar-logo {
@@ -84,13 +86,13 @@
             gap: 10px;
             font-size: 22px;
             font-weight: 700;
-            color: #ffffff;
+            color: #f1f5f9;
             letter-spacing: -0.5px;
             text-decoration: none;
         }
 
         .sidebar-logo i {
-            color: var(--accent-gold);
+            color: var(--accent-purple);
             font-size: 24px;
         }
 
@@ -101,38 +103,38 @@
             gap: 12px;
             padding: 18px;
             margin: 20px 16px 12px 16px;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.06);
             border-radius: var(--radius-md);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .sidebar-avatar {
             width: 44px;
             height: 44px;
-            background: rgba(212, 175, 55, 0.12);
+            background: rgba(133, 16, 127, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent-gold);
+            color: var(--accent-purple);
             font-size: 20px;
         }
 
         .sidebar-user-info h4 {
             font-size: 14px;
             font-weight: 600;
-            color: #ffffff;
+            color: #f1f5f9;
             margin-bottom: 4px;
         }
 
         .user-role {
             font-size: 10px;
             font-weight: 500;
-            color: #a0a0a0;
-            background: rgba(255, 255, 255, 0.06);
+            color: #f0f0f2;
             padding: 2px 8px;
             border-radius: 12px;
             display: inline-block;
+            border: 1px solid #474747;
         }
 
         /* Sidebar Navigation */
@@ -157,7 +159,7 @@
             gap: 12px;
             padding: 10px 16px;
             margin: 0 12px;
-            color: #a0a0a0;
+            color: #cbd5e1;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
@@ -168,28 +170,28 @@
         .sidebar-menu-link i {
             width: 20px;
             font-size: 16px;
-            color: #888888;
+            color: #94a3b8;
         }
 
         .sidebar-menu-link:hover {
-            background: #1a1a1a;
+            background: #374151;
             color: #ffffff;
         }
         .sidebar-menu-link:hover i {
-            color: var(--accent-gold);
+            color: var(--accent-purple);
         }
 
         .sidebar-menu-link.active {
-            background: #1a1a1a;
-            color: #ffffff;
+            border: 1px solid #474747;
+            color: #cbd5e1;
         }
         .sidebar-menu-link.active i {
-            color: var(--accent-gold);
+            color: #cbd5e1;
         }
 
         .sidebar-divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
             margin: 20px 20px;
         }
 
@@ -198,7 +200,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            color: #777777;
+            color: var(--accent-purple);
             padding: 0 20px;
             margin: 16px 0 8px 0;
         }
@@ -208,7 +210,7 @@
             font-size: 11px;
             opacity: 0;
             transition: var(--transition);
-            color: var(--accent-gold);
+            color: var(--accent-purple);
         }
 
         .sidebar-menu-link:hover .menu-arrow {
@@ -220,19 +222,35 @@
             opacity: 1;
         }
 
+        /* ========== SIDEBAR FOOTER - PREMIUM PURPLE GRADIENT ========== */
         .sidebar-footer {
             padding: 20px 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             margin-top: auto;
+            background: linear-gradient(135deg, rgba(133, 16, 127, 0.3) 0%, rgba(94, 13, 90, 0.3) 100%);
+            position: relative;
+        }
+
+        .sidebar-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(133, 16, 127, 0.12), transparent 70%);
+            pointer-events: none;
         }
 
         .sidebar-version {
             font-size: 11px;
-            color: #777777;
+            color: #cbd5e1;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
         .sidebar-version i {
-            color: var(--accent-gold);
+            color: var(--accent-purple);
             margin-right: 4px;
         }
 
@@ -244,7 +262,7 @@
             background: var(--bg-secondary);
         }
 
-        /* ========== PROFESSIONAL HEADER - BLACK & WHITE ========== */
+        /* ========== PROFESSIONAL HEADER ========== */
         .premium-header {
             background: #ffffff;
             border-bottom: 1px solid #e8e8ec;
@@ -290,7 +308,7 @@
             gap: 8px;
         }
         .page-title-desktop i {
-            color: var(--accent-gold);
+            color: var(--accent-purple);
             font-size: 18px;
         }
         .page-title-desktop h1 {
@@ -302,7 +320,7 @@
         .page-title-desktop span {
             font-size: 13px;
             font-weight: 400;
-            color: #888888;
+            color: var(--accent-purple);
             margin-left: 4px;
         }
 
@@ -320,15 +338,7 @@
         }
         .user-welcome-name {
             font-weight: 700;
-            color: #111111;
-        }
-        .user-welcome-badge {
-            background: #f5f5f7;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--accent-gold);
+            color: var(--accent-purple);
         }
 
         /* Header Actions */
@@ -338,7 +348,7 @@
             gap: 12px;
         }
 
-        /* Professional Action Buttons - No Blue */
+        /* ========== HEADER PROFILE BUTTON - PURPLE ACCENT ========== */
         .header-btn {
             display: flex;
             align-items: center;
@@ -351,17 +361,21 @@
             transition: all 0.2s;
         }
         .profile-btn {
-            background: #f5f5f7;
-            border: 1px solid #e8e8ec;
-            color: #111111;
+            background: linear-gradient(135deg, rgba(133, 16, 127, 0.12) 0%, rgba(94, 13, 90, 0.08) 100%);
+            border: 1px solid rgba(133, 16, 127, 0.25);
+            color: var(--accent-purple);
         }
         .profile-btn:hover {
-            background: #ebebef;
-            border-color: #d4af37;
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: #ffffff;
         }
         .profile-btn i {
-            color: var(--accent-gold);
+            color: var(--accent-purple);
             font-size: 14px;
+        }
+        .profile-btn:hover i {
+            color: #ffffff;
         }
         .logout-btn {
             background: #fafafa;
@@ -370,7 +384,7 @@
         }
         .logout-btn:hover {
             background: #fef2f2;
-            border-color: #d4af37;
+            border-color: #ffaaaa;
         }
         .logout-btn i {
             font-size: 13px;
@@ -405,6 +419,9 @@
             color: #111111;
             background: #ffffff;
         }
+        .card-header i {
+            color: var(--accent-purple);
+        }
         .card-body {
             padding: 28px;
         }
@@ -423,15 +440,15 @@
             border: none;
         }
         .btn-primary {
-            background: #111111;
+            background: var(--accent-purple);
             color: #ffffff;
         }
         .btn-primary:hover {
-            background: #2a2a2a;
+            background: var(--accent-purple-dark);
             transform: translateY(-1px);
         }
         .btn-primary i {
-            color: var(--accent-gold);
+            color: #ffffff;
         }
         .btn-secondary {
             background: #f5f5f7;
@@ -440,10 +457,10 @@
         }
         .btn-secondary:hover {
             background: #ebebef;
-            border-color: #d4af37;
+            border-color: var(--accent-purple);
         }
         .btn-secondary i {
-            color: var(--accent-gold);
+            color: var(--accent-purple);
         }
 
         /* Mobile Responsive */
@@ -486,7 +503,8 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.5);
+                background: rgba(133, 16, 127, 0.08);
+                backdrop-filter: blur(4px);
                 z-index: 999;
                 display: none;
             }
@@ -522,12 +540,12 @@
 <body>
 
 <div class="app-wrapper">
-    <!-- Premium Sidebar - ALL DJANGO TAGS FULLY PRESERVED -->
+    <!-- Premium Sidebar -->
     <aside class="premium-sidebar" id="premiumSidebar">
         <div class="sidebar-header">
             <a href="{% url 'home' %}" class="sidebar-logo">
-                <i class="fas fa-gem"></i>
-                <span>NOIR</span>
+                <i class="fas fa-mobile-alt"></i>
+                <span>E-Commerce</span>
             </a>
         </div>
 
@@ -543,21 +561,65 @@
 
         <nav class="sidebar-nav">
             <ul class="sidebar-menu">
-                <li class="sidebar-menu-item">
-                    <a href="{% url 'dashboard' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Dashboard</span>
-                        <i class="fas fa-chevron-right menu-arrow"></i>
-                    </a>
-                </li>
-                <li class="sidebar-menu-item">
-                    <a href="{% url 'profile' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
-                        <i class="fas fa-user"></i>
-                        <span>My Profile</span>
-                        <i class="fas fa-chevron-right menu-arrow"></i>
-                    </a>
-                </li>
-                  {% if request.user.user_type == 'admin' %}
+               <!-- Dashboard -->
+<li class="sidebar-menu-item">
+    <a href="{% url 'dashboard' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i>
+        <span>Dashboard</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+    </a>
+</li>
+
+<!-- Profile -->
+<li class="sidebar-menu-item">
+    <a href="{% url 'profile' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <i class="fas fa-user"></i>
+        <span>My Profile</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+    </a>
+</li>
+
+<!-- Catalog Section -->
+<li class="sidebar-menu-title">
+    <span>CATALOG</span>
+</li>
+
+<!-- Categories -->
+<li class="sidebar-menu-item">
+    <a href="{% url 'catalog:category_list' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
+        <i class="fas fa-tags"></i>
+        <span>Categories</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+    </a>
+</li>
+
+<!-- Brands -->
+<li class="sidebar-menu-item">
+    <a href="{% url 'catalog:brand_list' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'brand_list' %}active{% endif %}">
+        <i class="fas fa-award"></i>
+        <span>Brands</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+    </a>
+</li>
+
+<!-- Attributes -->
+<li class="sidebar-menu-item">
+    <a href="{% url 'catalog:attribute_list' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'attribute_list' %}active{% endif %}">
+        <i class="fas fa-sliders-h"></i>
+        <span>Attributes</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+    </a>
+</li>
+
+<!-- Products -->
+<li class="sidebar-menu-item">
+    <a href="{% url 'catalog:product_list' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
+        <i class="fas fa-box"></i>
+        <span>Products</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+    </a>
+</li>
+                {% if request.user.user_type == 'admin' %}
                 <li class="sidebar-menu-item">
                     <a href="{% url 'address_list' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'address_list' %}active{% endif %}">
                         <i class="fas fa-map-marker-alt"></i>
@@ -565,10 +627,10 @@
                         <i class="fas fa-chevron-right menu-arrow"></i>
                     </a>
                 </li>
-                  {% endif %}
-                 {% if request.user.user_type == 'superuser' %}
+                {% endif %}
+                {% if request.user.user_type == 'superuser' %}
                 <li class="sidebar-divider"></li>
-                <li class="sidebar-menu-title">Admin Access</li>
+                <li class="sidebar-menu-title">ADMIN ACCESS</li>
                 
                 <li class="sidebar-menu-item">
                     <a href="{% url 'user_management' %}" class="sidebar-menu-link {% if request.resolver_match.url_name == 'user_management' %}active{% endif %}">
@@ -601,39 +663,35 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- PROFESSIONAL HEADER - BLACK, WHITE & GOLD ONLY -->
         <header class="premium-header">
             <div class="header-left">
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
                 </button>
                 
-                <!-- Desktop Page Title -->
                 <div class="page-title-desktop">
                     <i class="fas fa-chart-line"></i>
-                    <h1>Dashboard <span>/ E-Commerce</span></h1>
+                    <h1>Dashboard <span>/ Overview</span></h1>
                 </div>
                 
-                <!-- Desktop User Welcome -->
                 <div class="user-welcome">
                     <span class="user-welcome-text">Welcome back,</span>
                     <span class="user-welcome-name">
                         {% if request.user.user_type == 'superuser' %}
-                            Super User
+                            Administrator
                         {% else %}
                             {{ request.user.first_name|default:request.user.username }}
                         {% endif %}
                     </span>
                 </div>
                 
-                <!-- Mobile Page Title -->
                 <h2 class="page-title" id="pageTitle">Dashboard</h2>
             </div>
             
             <div class="header-right">
                 <a href="{% url 'profile' %}" class="header-btn profile-btn">
                     <i class="fas fa-user-circle"></i>
-                    <span>Profile</span>
+                    <span>{{ request.user.first_name|default:request.user.username }}</span>
                 </a>
                 <a href="{% url 'logout' %}" class="header-btn logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
@@ -642,12 +700,11 @@
             </div>
         </header>
 
-        <!-- Page Content - DJANGO BLOCK TAGS FULLY INTACT -->
         {% block content %}
         <div class="page-content">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-chart-line" style="margin-right: 8px; color: var(--accent-gold);"></i> 
+                    <i class="fas fa-chart-line" style="margin-right: 8px;"></i> 
                     {% if request.user.user_type == 'superuser' %}
                         Administration Overview
                     {% else %}
@@ -656,7 +713,7 @@
                 </div>
                 <div class="card-body">
                     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
-                        <i class="fas fa-info-circle" style="color: var(--accent-gold);"></i>
+                        <i class="fas fa-info-circle" style="color: var(--accent-purple);"></i>
                         <p style="color: var(--text-secondary); margin: 0;">
                             {% if request.user.user_type == 'superuser' %}
                                 You have full administrative privileges. Manage users, system settings, and monitor platform analytics.
@@ -673,7 +730,7 @@
                         </div>
                         <div style="background: #f8fafc; border-radius: 16px; padding: 18px; border: 1px solid var(--border-light);">
                             <div style="font-size: 13px; font-weight: 500; color: var(--text-secondary);">Access Level</div>
-                            <div style="font-size: 28px; font-weight: 700; color: var(--accent-gold); margin-top: 6px;">
+                            <div style="font-size: 28px; font-weight: 700; color: var(--accent-purple); margin-top: 6px;">
                                 {{ request.user.user_type|title }}
                             </div>
                         </div>
@@ -699,7 +756,6 @@
 </div>
 
 <script>
-    // Mobile sidebar toggle - FUNCTIONALITY COMPLETELY UNCHANGED
     const sidebar = document.getElementById('premiumSidebar');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const overlay = document.getElementById('sidebarOverlay');
@@ -736,7 +792,6 @@
         }
     });
 
-    // Update page title on mobile - FUNCTIONALITY COMPLETELY UNCHANGED
     document.querySelectorAll('.sidebar-menu-link').forEach(link => {
         link.addEventListener('click', function() {
             const menuText = this.querySelector('span')?.innerText;
